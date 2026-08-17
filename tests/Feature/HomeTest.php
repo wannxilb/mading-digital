@@ -38,7 +38,7 @@ class HomeTest extends TestCase
         $category = Category::factory()->create();
         $post = Post::factory()->create(['category_id' => $category->id, 'is_published' => true, 'views' => 0]);
 
-        $this->get('/baca/'.$post->slug)->assertStatus(200);
+        $this->get('/berita/'.$post->slug)->assertStatus(200);
 
         $this->assertSame(1, $post->refresh()->views);
     }
@@ -48,7 +48,7 @@ class HomeTest extends TestCase
         $category = Category::factory()->create();
         $post = Post::factory()->create(['category_id' => $category->id, 'is_published' => false]);
 
-        $this->get('/baca/'.$post->slug)->assertNotFound();
+        $this->get('/berita/'.$post->slug)->assertNotFound();
     }
 
     public function test_login_page_is_accessible(): void

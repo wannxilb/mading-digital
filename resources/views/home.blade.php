@@ -1,283 +1,225 @@
 @extends('layouts.app')
 
 @section('title', 'Majalah Dinding Sekolah')
-@section('meta_description', 'Menjelajahi pengumuman, prestasi, kegiatan, dan karya dalam perjalanan sekolah kita.')
+@section('meta_description', 'Pengumuman, berita, karya siswa, agenda, dan prestasi sekolah.')
 
 @section('content')
-    <div class="pt-24 sm:pt-28">
-        {{-- HERO — Titik Awal Perjalanan --}}
-        <section class="relative overflow-hidden bg-white">
-            <div class="absolute inset-0 bg-grid-blue"></div>
-            <div class="absolute -top-24 -right-24 size-96 rounded-full bg-royal-500/10 blur-3xl"></div>
-            <div class="absolute top-40 -left-32 size-80 rounded-full bg-sky-400/10 blur-3xl"></div>
+    {{-- HERO --}}
+    <section class="border-b-2 border-ink">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 pt-28 sm:pt-32 pb-14">
+            <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+                <div class="lg:col-span-7">
+                    <span class="kicker" data-hero="kicker">Majalah Dinding Digital</span>
 
-            <div class="relative mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
-                <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+                    <h1 class="mt-4 font-display text-[clamp(2.2rem,5.5vw,4rem)] font-bold leading-[1.08] tracking-tight text-ink text-balance" data-hero="title">
+                        Informasi sekolah & <span class="italic text-blue">karya siswanya</span> dalam satu papan.
+                    </h1>
 
-                    <div class="lg:col-span-7">
-                        <span class="reveal inline-flex items-center gap-2 rounded-full bg-ice-100 px-3.5 py-1.5 text-xs font-bold text-royal-600 ring-1 ring-royal-500/20">
-                            <span class="size-2 rounded-full bg-royal-600 animate-pulse-dot"></span>
-                            Papan perjalanan sekolah kita
-                        </span>
+                    <p class="mt-5 max-w-xl text-base leading-relaxed text-ink-2 sm:text-lg" data-hero="desc">
+                        Pengumuman terbaru, berita kegiatan, tulisan siswa, agenda, dan prestasi — semua ada di sini.
+                    </p>
 
-                        <h1 class="reveal mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-900 text-balance sm:text-5xl lg:text-6xl" style="transition-delay:.05s">
-                            Setiap langkah di sekolah adalah <span class="text-transparent bg-clip-text bg-gradient-to-r from-navy-800 via-royal-600 to-sky-500">cerita yang layak dibaca.</span>
-                        </h1>
-
-                        <p class="reveal mt-5 max-w-xl text-base sm:text-lg leading-relaxed text-navy-900/60" style="transition-delay:.1s">
-                            Selamat datang di mading digital. Jelajahi pengumuman, prestasi, kegiatan, dan karya — dari gerbang masuk hingga langkah terakhir kita di sekolah.
-                        </p>
-
-                        <div class="reveal mt-8 flex flex-col sm:flex-row gap-3" style="transition-delay:.15s">
-                            <a href="#semua" class="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-navy-800 to-royal-600 px-6 py-4 text-sm font-bold text-white shadow-glow transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
-                                Mulai Menjelajah
-                                <x-icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-1"/>
-                            </a>
-                            <a href="{{ route('home') }}#pengumuman" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-sm font-bold text-navy-900 ring-1 ring-navy-900/10 transition-all duration-300 hover:ring-royal-500/40 hover:shadow-soft">
-                                <x-icon name="map-pin" class="size-4 text-royal-600"/>
-                                Lihat Papan Info
-                            </a>
+                    <form method="GET" action="{{ route('cari.index') }}" class="mt-7 max-w-xl" data-hero="search">
+                        <div class="relative">
+                            <input
+                                type="search"
+                                name="q"
+                                value="{{ request('q') }}"
+                                placeholder="Cari pengumuman, berita, karya…"
+                                class="field border-2 !py-4 pr-28"
+                                aria-label="Cari konten"
+                            >
+                            <button type="submit" class="btn-ink absolute right-2 top-1/2 !px-4 -translate-y-1/2">
+                                Cari
+                            </button>
                         </div>
+                    </form>
 
-                        <div class="reveal mt-10 grid grid-cols-3 gap-4 sm:gap-6 max-w-md" style="transition-delay:.2s">
-                            <div class="rounded-2xl bg-ice-50 ring-1 ring-navy-900/5 p-3.5 sm:p-4">
-                                <p class="font-display text-2xl sm:text-3xl font-extrabold text-navy-900" data-count="{{ $totalPosts }}">0</p>
-                                <p class="mt-1 text-[11px] sm:text-xs font-semibold text-navy-900/50">Cerita diterbitkan</p>
-                            </div>
-                            <div class="rounded-2xl bg-ice-50 ring-1 ring-navy-900/5 p-3.5 sm:p-4">
-                                <p class="font-display text-2xl sm:text-3xl font-extrabold text-navy-900" data-count="{{ $totalViews }}">0</p>
-                                <p class="mt-1 text-[11px] sm:text-xs font-semibold text-navy-900/50">Kali dibaca</p>
-                            </div>
-                            <div class="rounded-2xl bg-ice-50 ring-1 ring-navy-900/5 p-3.5 sm:p-4">
-                                <p class="font-display text-2xl sm:text-3xl font-extrabold text-navy-900" data-count="{{ $categories->count() }}">0</p>
-                                <p class="mt-1 text-[11px] sm:text-xs font-semibold text-navy-900/50">Halte perjalanan</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- JOURNEY PATH ARTWORK --}}
-                    <div class="lg:col-span-5 reveal" style="transition-delay:.1s">
-                        <div class="relative mx-auto max-w-sm">
-                            <svg viewBox="0 0 400 460" class="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path id="journey-path" d="M80 420 C 60 360, 120 340, 100 280 S 180 210, 160 150 S 250 110, 240 60" stroke="#3b82f6" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round" opacity="0.45"/>
-
-                                <g id="pin-1">
-                                    <circle cx="80" cy="420" r="18" fill="#0b1b3f"/>
-                                    <circle cx="80" cy="420" r="7" fill="#38bdf8" class="animate-pulse-dot"/>
-                                </g>
-                                <g id="pin-2">
-                                    <circle cx="100" cy="280" r="16" fill="#1d4ed8"/>
-                                    <circle cx="100" cy="280" r="6" fill="#fff"/>
-                                </g>
-                                <g id="pin-3">
-                                    <circle cx="160" cy="150" r="16" fill="#2563eb"/>
-                                    <circle cx="160" cy="150" r="6" fill="#fff"/>
-                                </g>
-                                <g id="pin-4">
-                                    <circle cx="240" cy="60" r="20" fill="#0ea5e9"/>
-                                    <circle cx="240" cy="60" r="8" fill="#fff"/>
-                                    <circle cx="240" cy="60" r="12" fill="none" stroke="#fff" opacity="0.6"/>
-                                </g>
-                            </svg>
-
-                            <div class="absolute top-[8%] -right-2 sm:right-0 rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5 px-4 py-2.5 animate-float">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy-900/40">Halte 1</p>
-                                <p class="text-xs font-bold text-navy-900">Papan Info</p>
-                            </div>
-                            <div class="absolute top-[38%] -left-3 sm:left-0 rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5 px-4 py-2.5 animate-float" style="animation-delay:1.2s">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy-900/40">Halte 2</p>
-                                <p class="text-xs font-bold text-navy-900">Prestasi</p>
-                            </div>
-                            <div class="absolute top-[64%] -right-2 sm:right-2 rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5 px-4 py-2.5 animate-float" style="animation-delay:.6s">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy-900/40">Halte 3</p>
-                                <p class="text-xs font-bold text-navy-900">Kegiatan</p>
-                            </div>
-                        </div>
+                    <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-ink-2" data-hero="stats">
+                        <span><strong class="font-bold text-ink" data-count="{{ $totalBerita }}">0</strong> berita</span>
+                        <span><strong class="font-bold text-ink" data-count="{{ $totalArtikel }}">0</strong> karya siswa</span>
+                        <span><strong class="font-bold text-ink" data-count="{{ $totalPrestasi }}">0</strong> prestasi</span>
+                        <span><strong class="font-bold text-ink" data-count="{{ $totalViews }}">0</strong> kali dibaca</span>
                     </div>
                 </div>
 
-                {{-- SEARCH --}}
-                <form method="GET" action="{{ route('home') }}" class="reveal mx-auto mt-14 max-w-2xl" style="transition-delay:.25s">
-                    <div class="relative">
-                        <x-icon name="search" class="pointer-events-none absolute left-5 top-1/2 size-5 -translate-y-1/2 text-navy-900/35"/>
-                        <input
-                            type="search"
-                            name="q"
-                            value="{{ request('q') }}"
-                            placeholder="Cari pengumuman, prestasi, kegiatan, atau karya..."
-                            class="w-full rounded-2xl border-0 bg-white py-4 pl-13 pr-28 text-sm font-medium text-navy-900 shadow-soft ring-1 ring-navy-900/10 placeholder:text-navy-900/35 focus:outline-none focus:ring-2 focus:ring-royal-500 transition-shadow"
-                        >
-                        <button type="submit" class="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-xl bg-navy-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-navy-800 transition-colors">
-                            Cari
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
+                @if ($featured)
+                    <div class="lg:col-span-5" data-hero="featured">
+                        <article class="group relative card h-full flex flex-col overflow-hidden">
+                            <a href="{{ route('berita.show', $featured) }}" class="absolute inset-0 z-10" aria-label="Baca {{ $featured->title }}"></a>
 
-        {{-- MARQUEE — berita berjalan --}}
-        @if ($posts->isNotEmpty())
-            <div class="border-y border-navy-900/10 bg-navy-900 py-3.5 overflow-hidden">
-                <div class="flex w-max animate-marquee gap-12 whitespace-nowrap" id="marquee">
-                    @foreach (collect()->pad(3, null) as $i)
-                        @foreach ($posts->take(6) as $post)
-                            <a href="{{ route('post.show', $post) }}" class="inline-flex items-center gap-3 text-sm font-semibold text-white/80 hover:text-white transition-colors">
-                                <x-icon name="sparkle" class="size-3.5 text-sky-400"/>
-                                {{ $post->title }}
-                            </a>
-                        @endforeach
+                            <div class="relative aspect-[16/11] overflow-hidden bg-paper-deep">
+                                @if ($featured->image)
+                                    <div class="img-skel relative h-full w-full">
+                                        <div class="skeleton-image absolute inset-0"></div>
+                                        <img data-src="{{ asset('storage/'.$featured->image) }}" alt="{{ $featured->title }}" loading="lazy" class="h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:scale-105">
+                                    </div>
+                                @endif
+                                <span class="absolute left-3 top-3 z-20 tag-ink">
+                                    Berita Utama
+                                </span>
+                            </div>
+
+                            <div class="flex flex-1 flex-col p-5">
+                                <div class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-ink-3">
+                                    <span class="text-accent">{{ $featured->category?->name }}</span>
+                                    <span>·</span>
+                                    <span>{{ $featured->display_date }}</span>
+                                </div>
+                                <h2 class="mt-2.5 font-display text-xl font-bold leading-snug tracking-tight text-ink text-balance">{{ $featured->title }}</h2>
+                                <p class="mt-2 text-sm leading-relaxed text-ink-2 line-clamp-3">{{ $featured->excerpt }}</p>
+                                <div class="mt-auto pt-4 text-xs font-semibold text-ink-3">
+                                    {{ $featured->author }}
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </section>
+
+    {{-- PENGUMUMAN + AGENDA --}}
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16" data-section>
+        <div class="grid gap-10 lg:grid-cols-2 lg:gap-12">
+            <div>
+                <div class="flex items-center justify-between gap-4">
+                    <x-section-head title="Pengumuman" />
+                    <a href="{{ route('pengumuman.index') }}" class="btn-ghost shrink-0">
+                        Semua <x-icon name="arrow-right" class="size-4"/>
+                    </a>
+                </div>
+
+                <div class="mt-5 space-y-3">
+                    @forelse ($pengumuman as $peng)
+                        <div class="group flex gap-4 card card-hover p-4">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    @if ($peng->is_pinned)
+                                        <span class="tag-ink">PIN</span>
+                                    @endif
+                                    <span class="{{ $peng->priority === 'mendesak' ? 'tag-red' : ($peng->priority === 'penting' ? 'tag-amber' : 'tag-gray') }}">
+                                        {{ $peng->priority_label }}
+                                    </span>
+                                </div>
+                                <h3 class="mt-1.5 font-display text-base font-bold leading-snug text-ink group-hover:text-accent transition-colors">{{ $peng->title }}</h3>
+                                <p class="mt-1 text-sm leading-relaxed text-ink-2 line-clamp-2">{{ $peng->content }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="card p-5 text-sm text-ink-3">Belum ada pengumuman.</div>
+                    @endforelse
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between gap-4">
+                    <x-section-head title="Agenda Mendatang" />
+                    <a href="{{ route('agenda.index') }}" class="btn-ghost shrink-0">
+                        Semua <x-icon name="arrow-right" class="size-4"/>
+                    </a>
+                </div>
+
+                <div class="mt-5 space-y-3">
+                    @forelse ($agenda as $event)
+                        <x-event-card :event="$event" />
+                    @empty
+                        <div class="card p-5 text-sm text-ink-3">Belum ada agenda mendatang.</div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- BERITA SEKOLAH --}}
+    @if ($berita->isNotEmpty())
+        <section class="border-y-2 border-ink bg-cream" data-section>
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16">
+                <x-section-head
+                    title="Berita Sekolah"
+                    desc="Kegiatan dan kabar terbaru dari sekolah."
+                    :link="route('berita.index')"
+                    linkLabel="Semua Berita"
+                />
+
+                <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($berita as $post)
+                        <x-post-card :post="$post" />
                     @endforeach
                 </div>
             </div>
-        @endif
+        </section>
+    @endif
 
-        {{-- HALTE UTAMA — konten unggulan --}}
-        @if ($featured)
-            <section class="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-                <div class="reveal grid gap-8 lg:grid-cols-2 lg:gap-12 items-center overflow-hidden rounded-3xl bg-gradient-to-br from-navy-900 via-navy-800 to-royal-700 p-8 sm:p-12 text-white shadow-lift relative">
-                    <div class="absolute inset-0 bg-grid-blue opacity-20"></div>
-                    <div class="absolute -top-20 -right-20 size-72 rounded-full bg-sky-400/20 blur-3xl"></div>
+    {{-- KARYA SISWA --}}
+    @if ($artikel->isNotEmpty())
+        <section class="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16" data-section>
+            <x-section-head
+                title="Karya & Artikel Siswa"
+                desc="Tulisan hasil karya teman-teman: cerpen, puisi, opini, dan sebagainya."
+                :link="route('artikel.index')"
+                linkLabel="Semua Artikel"
+            />
 
-                    <div class="relative">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold backdrop-blur">
-                            <x-icon name="trophy" class="size-3.5 text-sky-400"/>
-                            Cerita Unggulan Pekan Ini
-                        </span>
-                        <h2 class="mt-5 font-display text-3xl sm:text-4xl font-extrabold leading-tight text-balance">{{ $featured->title }}</h2>
-                        <p class="mt-4 max-w-lg text-sm sm:text-base leading-relaxed text-white/70">{{ $featured->excerpt }}</p>
-                        <div class="mt-6 flex flex-wrap items-center gap-4 text-xs font-semibold text-white/60">
-                            <span class="inline-flex items-center gap-2"><x-icon :name="$featured->category?->icon ?? 'sparkle'" class="size-4 text-sky-400"/>{{ $featured->category?->name }}</span>
-                            <span class="inline-flex items-center gap-2"><x-icon name="clock" class="size-4 text-sky-400"/>{{ $featured->display_date }}</span>
-                            <span class="inline-flex items-center gap-2"><x-icon name="eye" class="size-4 text-sky-400"/>{{ number_format($featured->views) }} kali dibaca</span>
-                        </div>
-                        <a href="{{ route('post.show', $featured) }}" class="group mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-bold text-navy-900 transition-all duration-300 hover:bg-sky-50 hover:-translate-y-0.5">
-                            Lanjut Baca
-                            <x-icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-1"/>
-                        </a>
-                    </div>
-
-                    <div class="relative hidden lg:block">
-                        @if ($featured->image)
-                            <img src="{{ asset('storage/'.$featured->image) }}" alt="{{ $featured->title }}" class="rounded-2xl shadow-lift">
-                        @else
-                            <div class="grid place-items-center rounded-2xl bg-white/10 backdrop-blur p-10 aspect-square">
-                                <x-icon :name="$featured->category?->icon ?? 'sparkle'" class="size-52 text-white/30"/>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </section>
-        @endif
-
-        {{-- HALTE-HALTE PERJALANAN --}}
-        @php
-            $stops = [
-                ['id' => 'pengumuman', 'slug' => 'pengumuman', 'num' => '01', 'title' => 'Papan Info', 'desc' => 'Informasi penting yang perlu kamu tahu lebih dulu.'],
-                ['id' => 'prestasi', 'slug' => 'prestasi', 'num' => '02', 'title' => 'Prestasi', 'desc' => 'Kabar membanggakan dari warga sekolah kita.'],
-                ['id' => 'kegiatan', 'slug' => 'kegiatan', 'num' => '03', 'title' => 'Kegiatan', 'desc' => 'Momen seru dari agenda sekolah sepanjang tahun.'],
-                ['id' => 'karya', 'slug' => 'karya', 'num' => '04', 'title' => 'Karya & Kreativitas', 'desc' => 'Karya, tulisan, dan ide kreatif siswa.'],
-            ];
-        @endphp
-
-        @foreach ($stops as $index => $stop)
-            @php
-                $category = $categories->firstWhere('slug', $stop['slug']);
-                $postsInStop = $posts->where('category.slug', $stop['slug'])->take(4);
-                $isReversed = $index % 2 === 1;
-            @endphp
-            @if ($category && $postsInStop->isNotEmpty())
-                <section id="{{ $stop['id'] }}" class="scroll-mt-28 border-t border-navy-900/5 bg-white">
-                    <div class="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-                        <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-                            <div>
-                                <div class="flex items-center gap-4">
-                                    <span class="grid place-items-center size-11 rounded-2xl bg-gradient-to-br from-navy-800 to-royal-600 text-white shadow-glow">
-                                        <x-icon :name="$category->icon" class="size-5"/>
-                                    </span>
-                                    <div>
-                                        <p class="font-display text-3xl font-extrabold text-royal-500/30">{{ $stop['num'] }}</p>
-                                    </div>
-                                </div>
-                                <h2 class="mt-4 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-navy-900">{{ $stop['title'] }}</h2>
-                                <p class="mt-2 max-w-lg text-sm sm:text-base text-navy-900/55">{{ $category->description }}</p>
-                            </div>
-                            <a href="{{ route('category', $category) }}" class="group inline-flex shrink-0 items-center gap-2 rounded-2xl bg-ice-100 px-5 py-3 text-sm font-bold text-navy-900 transition-colors hover:bg-royal-600 hover:text-white">
-                                Lihat Semua
-                                <x-icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-1"/>
-                            </a>
-                        </div>
-
-                        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                            @foreach ($postsInStop as $post)
-                                <div class="reveal" style="transition-delay: {{ $loop->index * 0.07 }}s">
-                                    <x-post-card :post="$post"/>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </section>
-            @endif
-        @endforeach
-
-        {{-- SEMUA KONTEN — peta lengkap perjalanan --}}
-        <section id="semua" class="scroll-mt-28 mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-            <div class="reveal max-w-2xl">
-                <span class="inline-flex items-center gap-2 rounded-full bg-ice-100 px-3.5 py-1.5 text-xs font-bold text-royal-600 ring-1 ring-royal-500/20">
-                    <x-icon name="map-pin" class="size-3.5"/>
-                    Peta Lengkap
-                </span>
-                <h2 class="mt-4 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-navy-900">Semua Cerita dalam Satu Peta</h2>
-                <p class="mt-2 text-sm sm:text-base text-navy-900/55">Jelajahi semua halte. Saring berdasarkan kategori untuk menemukan cerita yang sedang kamu cari.</p>
-            </div>
-
-            <div class="reveal mt-8 flex flex-wrap gap-2" style="transition-delay:.05s">
-                <a href="{{ route('home', ['category' => '', 'q' => request('q')]) }}"
-                   class="rounded-full px-4 py-2 text-xs font-bold transition-colors {{ ! $activeCategory ? 'bg-navy-900 text-white' : 'bg-ice-100 text-navy-800 hover:bg-ice-200' }}">
-                    Semua
-                </a>
-                @foreach ($categories as $category)
-                    <a href="{{ route('home', ['category' => $category->slug, 'q' => request('q')]) }}"
-                       class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-colors {{ $activeCategory === $category->slug ? 'bg-navy-900 text-white' : 'bg-ice-100 text-navy-800 hover:bg-ice-200' }}">
-                        <x-icon :name="$category->icon" class="size-3.5"/>
-                        {{ $category->name }}
-                    </a>
+            <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ($artikel as $article)
+                    <x-article-card :article="$article" />
                 @endforeach
             </div>
+        </section>
+    @endif
 
-            <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                @forelse ($posts as $post)
-                    <div class="reveal" style="transition-delay: {{ min($loop->index, 5) * 0.06 }}s">
-                        <x-post-card :post="$post"/>
+    {{-- PRESTASI --}}
+    @if ($prestasi->isNotEmpty())
+        <section class="border-y-2 border-ink bg-ink text-paper" data-section>
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16">
+                <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h2 class="font-display text-2xl font-bold tracking-tight text-cream sm:text-3xl">Prestasi</h2>
+                        <p class="mt-1.5 max-w-lg text-sm leading-relaxed text-cream/60">Juara lomba dan penghargaan yang diraih siswa.</p>
                     </div>
-                @empty
-                    <div class="col-span-full grid place-items-center rounded-3xl bg-white ring-1 ring-navy-900/5 py-20 text-center">
-                        <x-icon name="search" class="size-12 text-royal-500/40"/>
-                        <p class="mt-4 font-display font-bold text-lg text-navy-900">Belum ada cerita ditemukan</p>
-                        <p class="mt-1 text-sm text-navy-900/55 max-w-sm">Coba kata kunci lain atau pilih kategori yang berbeda.</p>
-                        <a href="{{ route('home') }}" class="mt-5 rounded-xl bg-navy-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-navy-800">Reset Pencarian</a>
-                    </div>
-                @endforelse
-            </div>
+                    <a href="{{ route('prestasi.index') }}" class="btn-acid shrink-0">
+                        Semua Prestasi <x-icon name="arrow-right" class="size-4"/>
+                    </a>
+                </div>
 
-            <div class="mt-10">
-                {{ $posts->links() }}
+                <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($prestasi as $achievement)
+                        <x-achievement-card :achievement="$achievement" />
+                    @endforeach
+                </div>
             </div>
         </section>
+    @endif
 
-        {{-- PENUTUP --}}
-        <section class="relative overflow-hidden bg-navy-900">
-            <div class="absolute inset-0 bg-grid-blue opacity-20"></div>
-            <div class="absolute -bottom-24 -left-24 size-96 rounded-full bg-royal-500/20 blur-3xl"></div>
-            <div class="absolute -top-24 -right-24 size-96 rounded-full bg-sky-400/15 blur-3xl"></div>
-            <div class="relative mx-auto max-w-4xl px-4 sm:px-6 py-20 text-center text-white">
-                <x-icon name="map-pin" class="mx-auto size-10 text-sky-400"/>
-                <h2 class="mt-6 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-balance">Perjalanan belum berakhir — masih banyak cerita menanti.</h2>
-                <p class="mt-4 mx-auto max-w-xl text-sm sm:text-base text-white/65">Terima kasih sudah berhenti di papan ini. Kembalilah lagi untuk membaca kisah terbaru dari sekolah kita.</p>
-                <a href="#semua" class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-bold text-navy-900 hover:bg-sky-50 transition-colors">
-                    Jelajahi Lagi
-                    <x-icon name="arrow-right" class="size-4"/>
+    {{-- KATEGORI --}}
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16" data-section>
+        <div class="max-w-2xl">
+            <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">Telusuri Kategori</h2>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+            @foreach ($categories as $category)
+                <a href="{{ route('category', $category) }}" class="chip !px-4 !py-2">
+                    {{ $category->name }}
+                    <span class="rounded-brutal bg-ink/10 px-1.5 text-[10px] text-ink-2">{{ $category->published_posts_count + $category->published_articles_count }}</span>
                 </a>
-            </div>
-        </section>
-    </div>
+            @endforeach
+        </div>
+    </section>
+
+    {{-- CTA --}}
+    <section class="border-t-2 border-ink bg-blue text-cream" data-section>
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 py-14 text-center">
+            <h2 class="font-display text-2xl font-bold tracking-tight text-cream sm:text-3xl">
+                Punya tulisan atau karya untuk dipajang?
+            </h2>
+            <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-cream/75">
+                Sampaikan ke guru pembina atau pengurus mading. Karya yang disetujui akan tampil di papan digital sekolah.
+            </p>
+            <a href="{{ route('tentang') }}" class="btn-ink mx-auto mt-7">
+                Tentang Mading <x-icon name="arrow-right" class="size-4"/>
+            </a>
+        </div>
+    </section>
 @endsection

@@ -37,11 +37,11 @@ class PostController extends Controller
     {
         $data = $this->validated($request);
 
-        $post = Post::create($data);
+        Post::create($data);
 
         return redirect()
-            ->route('admin.posts.edit', $post)
-            ->with('success', 'Konten mading berhasil diterbitkan.');
+            ->route('admin.berita.index')
+            ->with('success', 'Berita berhasil diterbitkan.');
     }
 
     public function edit(Post $post)
@@ -59,8 +59,8 @@ class PostController extends Controller
         $post->update($data);
 
         return redirect()
-            ->route('admin.posts.edit', $post)
-            ->with('success', 'Konten mading berhasil diperbarui.');
+            ->route('admin.berita.edit', $post)
+            ->with('success', 'Berita berhasil diperbarui.');
     }
 
     public function destroy(Post $post)
@@ -72,8 +72,8 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()
-            ->route('admin.posts.index')
-            ->with('success', 'Konten mading berhasil dihapus.');
+            ->route('admin.berita.index')
+            ->with('success', 'Berita berhasil dihapus.');
     }
 
     private function validated(Request $request, ?Post $post = null): array

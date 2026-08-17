@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Tulis Cerita')
-@section('heading', 'Tulis Cerita')
+@section('title', 'Tulis Berita')
+@section('heading', 'Tulis Berita')
 
 @section('content')
     @include('admin.posts.form')

@@ -31,19 +31,31 @@ class AuthTest extends TestCase
             ->assertRedirect('/admin');
     }
 
-    public function test_student_login_is_rejected(): void
+    public function test_student_login_redirects_to_dashboard(): void
     {
         User::factory()->create(['email' => 'siswa@example.com', 'role' => 'siswa']);
 
         $this->from('/admin/login')
             ->post('/admin/login', ['email' => 'siswa@example.com', 'password' => 'password'])
-            ->assertRedirect('/admin/login')
-            ->assertSessionHasErrors('email');
+            ->assertRedirect('/siswa');
+
+        $this->assertAuthenticated();
+    }
+
+    public function test_teacher_login_redirects_to_dashboard(): void
+    {
+        User::factory()->create(['email' => 'guru@example.com', 'role' => 'guru']);
+
+        $this->from('/admin/login')
+            ->post('/admin/login', ['email' => 'guru@example.com', 'password' => 'password'])
+            ->assertRedirect('/guru');
+
+        $this->assertAuthenticated();
     }
 
     public function test_guest_is_redirected_to_login_on_admin_routes(): void
     {
-        foreach (['/admin', '/admin/posts', '/admin/posts/baru', '/admin/kategori'] as $path) {
+        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/pengumuman', '/admin/agenda', '/admin/prestasi', '/admin/kategori', '/admin/pengguna'] as $path) {
             $this->get($path)->assertRedirect('/admin/login');
         }
     }
@@ -52,7 +64,7 @@ class AuthTest extends TestCase
     {
         $student = User::factory()->create(['role' => 'siswa']);
 
-        foreach (['/admin', '/admin/posts', '/admin/posts/baru', '/admin/kategori'] as $path) {
+        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/pengumuman', '/admin/agenda', '/admin/prestasi', '/admin/kategori', '/admin/pengguna'] as $path) {
             $this->actingAs($student)->get($path)->assertForbidden();
         }
     }
@@ -61,7 +73,7 @@ class AuthTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        foreach (['/admin', '/admin/posts', '/admin/posts/baru', '/admin/kategori'] as $path) {
+        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/artikel/baru', '/admin/pengumuman', '/admin/pengumuman/baru', '/admin/agenda', '/admin/agenda/baru', '/admin/prestasi', '/admin/prestasi/baru', '/admin/kategori', '/admin/pengguna', '/admin/pengguna/baru'] as $path) {
             $this->actingAs($admin)->get($path)->assertOk();
         }
     }
@@ -73,5 +85,16 @@ class AuthTest extends TestCase
         $this->actingAs($admin)
             ->post('/admin/logout')
             ->assertRedirect('/');
+    }
+
+    public function test_non_admin_can_logout_from_public_route(): void
+    {
+        $student = User::factory()->create(['role' => 'siswa']);
+
+        $this->actingAs($student)
+            ->post('/logout')
+            ->assertRedirect('/');
+
+        $this->assertGuest();
     }
 }

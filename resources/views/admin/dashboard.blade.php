@@ -5,100 +5,143 @@
 
 @section('content')
     {{-- Statistik --}}
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @php
             $stats = [
-                ['label' => 'Total Cerita', 'value' => $totalPosts, 'icon' => 'folder', 'tone' => 'from-navy-800 to-royal-600'],
-                ['label' => 'Cerita Tampil', 'value' => $publishedPosts, 'icon' => 'check', 'tone' => 'from-royal-500 to-sky-500'],
-                ['label' => 'Kategori', 'value' => $totalCategories, 'icon' => 'grid', 'tone' => 'from-sky-500 to-sky-400'],
-                ['label' => 'Total Pembaca', 'value' => number_format($totalViews), 'icon' => 'eye', 'tone' => 'from-navy-700 to-navy-600'],
+                ['label' => 'Total Berita', 'value' => $totalBerita, 'icon' => 'book', 'accent' => 'bg-acid'],
+                ['label' => 'Total Artikel', 'value' => $totalArtikel, 'icon' => 'pen', 'accent' => 'bg-blue'],
+                ['label' => 'Menunggu Review', 'value' => $pendingArtikel, 'icon' => 'clock', 'accent' => 'bg-accent'],
+                ['label' => 'Pengumuman Aktif', 'value' => $activePengumuman, 'icon' => 'megaphone', 'accent' => 'bg-acid'],
+                ['label' => 'Agenda Mendatang', 'value' => $agendaMendatang, 'icon' => 'calendar', 'accent' => 'bg-green'],
+                ['label' => 'Prestasi', 'value' => $totalPrestasi, 'icon' => 'award', 'accent' => 'bg-amber'],
+                ['label' => 'Total Pengguna', 'value' => $totalUsers, 'icon' => 'users', 'accent' => 'bg-blue'],
+                ['label' => 'Total Pembaca', 'value' => number_format($totalViews), 'icon' => 'eye', 'accent' => 'bg-ink'],
             ];
         @endphp
         @foreach ($stats as $stat)
-            <div class="reveal rounded-3xl bg-white p-5 shadow-soft ring-1 ring-navy-900/5" style="transition-delay: {{ $loop->index * 0.06 }}s">
+            <div class="reveal card card-hover border-2 p-5" style="transition-delay: {{ $loop->index * 0.04 }}s">
                 <div class="flex items-center justify-between">
-                    <span class="grid place-items-center size-11 rounded-2xl bg-gradient-to-br {{ $stat['tone'] }} text-white shadow-glow">
+                    <span class="grid size-11 place-items-center rounded-brutal border-2 border-ink shadow-brutal-sm {{ $stat['accent'] }} text-ink">
                         <x-icon :name="$stat['icon']" class="size-5"/>
                     </span>
-                    <x-icon name="chart" class="size-5 text-navy-900/15"/>
+                    <x-icon name="chart" class="size-5 text-ink-3/60"/>
                 </div>
-                <p class="mt-4 font-display text-2xl font-extrabold text-navy-900">{{ $stat['value'] }}</p>
-                <p class="mt-1 text-xs font-semibold text-navy-900/50">{{ $stat['label'] }}</p>
+                <p class="mt-4 font-display text-2xl font-bold text-ink">{{ $stat['value'] }}</p>
+                <p class="mt-1 text-xs font-bold uppercase tracking-wider text-ink-3">{{ $stat['label'] }}</p>
             </div>
         @endforeach
     </div>
 
     <div class="mt-8 grid gap-6 lg:grid-cols-3">
         {{-- Konten terbaru --}}
-        <div class="reveal lg:col-span-2 rounded-3xl bg-white shadow-soft ring-1 ring-navy-900/5 p-6" style="transition-delay:.1s">
+        <div class="reveal card border-2 p-6 lg:col-span-2" style="transition-delay:.1s">
             <div class="flex items-center justify-between">
-                <h2 class="font-display font-extrabold text-lg text-navy-900">Konten Terbaru</h2>
-                <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-royal-600 hover:text-navy-900 transition-colors">
-                    Kelola Semua
-                    <x-icon name="arrow-right" class="size-3.5"/>
-                </a>
+                <h2 class="font-display text-lg font-bold text-ink">Berita Terbaru</h2>
+                <a href="{{ route('admin.berita.index') }}" class="btn-ghost text-xs">Kelola Semua</a>
             </div>
 
-            <div class="mt-5 divide-y divide-navy-900/5">
+            <div class="mt-4 divide-y-2 divide-ink/10">
                 @forelse ($latestPosts as $post)
                     <div class="flex items-center gap-4 py-3.5">
-                        <span class="grid place-items-center size-10 shrink-0 rounded-xl bg-ice-100 text-royal-600">
-                            <x-icon :name="$post->category?->icon ?? 'sparkle'" class="size-5"/>
+                        <span class="grid size-10 shrink-0 place-items-center rounded-brutal border-2 border-ink bg-acid">
+                            <x-icon :name="$post->category?->icon ?? 'sparkle'" class="size-4.5"/>
                         </span>
                         <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-bold text-navy-900">{{ $post->title }}</p>
-                            <p class="mt-0.5 text-xs text-navy-900/50">
-                                {{ $post->category?->name }} · {{ $post->display_date }}
-                            </p>
+                            <p class="truncate text-sm font-bold text-ink">{{ $post->title }}</p>
+                            <p class="mt-0.5 text-xs font-semibold text-ink-3">{{ $post->category?->name }} · {{ $post->display_date }}</p>
                         </div>
                         <div class="flex shrink-0 items-center gap-2">
                             @if ($post->is_published)
-                                <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-600 ring-1 ring-emerald-200">Tampil</span>
+                                <span class="tag-green">Tampil</span>
                             @else
-                                <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold text-amber-600 ring-1 ring-amber-200">Draft</span>
+                                <span class="tag-amber">Draft</span>
                             @endif
-                            <a href="{{ route('admin.posts.edit', $post) }}" class="grid place-items-center size-8 rounded-lg bg-ice-100 text-navy-800 hover:bg-royal-600 hover:text-white transition-colors" title="Edit">
+                            <a href="{{ route('admin.berita.edit', $post) }}" class="grid size-8 place-items-center rounded-brutal border-2 border-ink bg-cream text-ink transition-colors hover:bg-acid" title="Edit">
                                 <x-icon name="edit" class="size-3.5"/>
                             </a>
                         </div>
                     </div>
                 @empty
-                    <p class="py-10 text-center text-sm text-navy-900/50">Belum ada konten. Tulis cerita pertamamu!</p>
+                    <p class="py-10 text-center text-sm text-ink-2">Belum ada berita. Tulis berita pertamamu!</p>
+                @endforelse
+            </div>
+
+            <h2 class="mt-8 font-display text-lg font-bold text-ink">Artikel Terbaru</h2>
+            <div class="mt-4 divide-y-2 divide-ink/10">
+                @forelse ($latestArticles as $article)
+                    <div class="flex items-center gap-4 py-3.5">
+                        <span class="grid size-10 shrink-0 place-items-center rounded-brutal border-2 border-ink bg-blue text-cream">
+                            <x-icon :name="$article->category?->icon ?? 'pen'" class="size-4.5"/>
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-bold text-ink">{{ $article->title }}</p>
+                            <p class="mt-0.5 text-xs font-semibold text-ink-3">{{ $article->author }} · {{ $article->status_label }}</p>
+                        </div>
+                        <div class="flex shrink-0 items-center gap-2">
+                            <span class="tag-{{ $article->status === 'published' ? 'green' : ($article->status === 'review' ? 'amber' : 'gray') }}">{{ $article->status_label }}</span>
+                            <a href="{{ route('admin.artikel.edit', $article) }}" class="grid size-8 place-items-center rounded-brutal border-2 border-ink bg-cream text-ink transition-colors hover:bg-acid" title="Edit">
+                                <x-icon name="edit" class="size-3.5"/>
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <p class="py-10 text-center text-sm text-ink-2">Belum ada artikel.</p>
                 @endforelse
             </div>
         </div>
 
-        {{-- Sebaran per kategori --}}
-        <div class="reveal rounded-3xl bg-white shadow-soft ring-1 ring-navy-900/5 p-6" style="transition-delay:.15s">
-            <h2 class="font-display font-extrabold text-lg text-navy-900">Sebaran Kategori</h2>
-
-            <div class="mt-5 space-y-4">
-                @forelse ($postsByCategory as $category)
-                    @php
-                        $max = max($postsByCategory->max('posts_count'), 1);
-                        $pct = round(($category->posts_count / $max) * 100);
-                    @endphp
-                    <div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="inline-flex items-center gap-2 font-bold text-navy-900">
-                                <x-icon :name="$category->icon" class="size-4 text-royal-600"/>
-                                {{ $category->name }}
-                            </span>
-                            <span class="font-bold text-navy-900/50">{{ $category->posts_count }}</span>
+        {{-- Sisi kanan: agenda + kategori --}}
+        <div class="space-y-6">
+            <div class="reveal card border-2 p-6" style="transition-delay:.15s">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-display text-lg font-bold text-ink">Agenda Mendatang</h2>
+                    <a href="{{ route('admin.agenda.index') }}" class="btn-ghost text-xs">Semua</a>
+                </div>
+                <div class="mt-4 space-y-3">
+                    @forelse ($upcomingEvents as $event)
+                        <div class="flex items-stretch overflow-hidden rounded-brutal border-2 border-ink">
+                            <div class="flex flex-col items-center justify-center bg-acid px-3 py-2 text-center text-ink">
+                                <span class="font-display text-lg font-bold leading-none">{{ $event->event_date->format('d') }}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest">{{ $event->event_date->translatedFormat('M') }}</span>
+                            </div>
+                            <div class="flex min-w-0 flex-1 items-center px-3 py-2">
+                                <p class="truncate text-sm font-bold text-ink">{{ $event->title }}</p>
+                            </div>
+                            <a href="{{ route('admin.agenda.edit', $event) }}" class="grid place-items-center border-l-2 border-ink px-3 text-ink transition-colors hover:bg-acid" title="Edit">
+                                <x-icon name="edit" class="size-3.5"/>
+                            </a>
                         </div>
-                        <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-ice-100">
-                            <div class="h-full rounded-full bg-gradient-to-r from-navy-800 to-royal-600 transition-all duration-700" style="width: {{ $pct }}%"></div>
-                        </div>
-                    </div>
-                @empty
-                    <p class="py-6 text-center text-sm text-navy-900/50">Belum ada kategori.</p>
-                @endforelse
+                    @empty
+                        <p class="py-6 text-center text-sm text-ink-2">Belum ada agenda mendatang.</p>
+                    @endforelse
+                </div>
             </div>
 
-            <a href="{{ route('home') }}" target="_blank" class="group mt-6 flex items-center justify-center gap-2 rounded-2xl bg-navy-900 px-5 py-3.5 text-sm font-bold text-white hover:bg-navy-800 transition-colors">
-                Lihat Papan Publik
-                <x-icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-1"/>
-            </a>
+            <div class="reveal card border-2 p-6" style="transition-delay:.2s">
+                <h2 class="font-display text-lg font-bold text-ink">Sebaran Berita per Kategori</h2>
+                <div class="mt-4 space-y-4">
+                    @forelse ($postsByCategory as $category)
+                        @php
+                            $max = max($postsByCategory->first()?->posts_count ?? 1, 1);
+                            $pct = round(($category->posts_count / $max) * 100);
+                        @endphp
+                        <div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="inline-flex items-center gap-2 font-bold text-ink">
+                                    <x-icon :name="$category->icon" class="size-4 text-accent"/>
+                                    {{ $category->name }}
+                                </span>
+                                <span class="font-bold text-ink-2">{{ $category->posts_count }}</span>
+                            </div>
+                            <div class="mt-2 h-3 rounded-brutal border-2 border-ink bg-paper">
+                                <div class="h-full rounded-brutal bg-ink transition-all duration-700" style="width: {{ max($pct, 4) }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="py-6 text-center text-sm text-ink-2">Belum ada kategori.</p>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
 @endsection

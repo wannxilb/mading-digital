@@ -27,7 +27,7 @@ class PublicPagesTest extends TestCase
         $matched = Post::factory()->create(['category_id' => $category->id, 'title' => 'Robotik Juara Nasional']);
         $unmatched = Post::factory()->create(['category_id' => $category->id, 'title' => 'Lomba Melukis']);
 
-        $this->get('/?q=Robotik')
+        $this->get('/cari?q=Robotik')
             ->assertOk()
             ->assertSee($matched->title)
             ->assertDontSee($unmatched->title);
@@ -38,7 +38,7 @@ class PublicPagesTest extends TestCase
         $category = Category::factory()->create();
         $post = Post::factory()->create(['category_id' => $category->id, 'body' => 'Panitia mengumumkan jadwal baru.']);
 
-        $this->get('/?q=jadwal')
+        $this->get('/cari?q=jadwal')
             ->assertOk()
             ->assertSee($post->title);
     }
@@ -48,19 +48,19 @@ class PublicPagesTest extends TestCase
         $category = Category::factory()->create();
         Post::factory()->create(['category_id' => $category->id]);
 
-        $this->get('/?q=zyxwv-tidak-ada')
+        $this->get('/cari?q=zyxwv-tidak-ada')
             ->assertOk()
-            ->assertSee('Belum ada cerita ditemukan');
+            ->assertSee('Tidak ditemukan');
     }
 
-    public function test_home_filters_by_category_slug(): void
+    public function test_berita_list_filters_by_category_slug(): void
     {
         $pengumuman = Category::factory()->create(['name' => 'Pengumuman', 'slug' => 'pengumuman']);
         $prestasi = Category::factory()->create(['name' => 'Prestasi', 'slug' => 'prestasi']);
-        $post = Post::factory()->create(['category_id' => $pengumuman->id]);
-        $other = Post::factory()->create(['category_id' => $prestasi->id]);
+        $post = Post::factory()->create(['category_id' => $pengumuman->id, 'is_published' => true]);
+        $other = Post::factory()->create(['category_id' => $prestasi->id, 'is_published' => true]);
 
-        $this->get('/?category='.$pengumuman->slug)
+        $this->get('/berita?category='.$pengumuman->slug)
             ->assertOk()
             ->assertSee($post->title)
             ->assertDontSee($other->title);
@@ -73,7 +73,7 @@ class PublicPagesTest extends TestCase
 
     public function test_unknown_post_slug_returns_404(): void
     {
-        $this->get('/baca/tidak-ada')->assertNotFound();
+        $this->get('/berita/tidak-ada')->assertNotFound();
     }
 
     public function test_category_page_excludes_draft_posts(): void
@@ -94,7 +94,7 @@ class PublicPagesTest extends TestCase
 
         $this->get('/kategori/'.$category->slug)
             ->assertOk()
-            ->assertSee('Belum ada cerita di halte ini');
+            ->assertSee('Belum ada konten di kategori ini');
     }
 
     public function test_home_renders_when_no_posts(): void
@@ -102,7 +102,7 @@ class PublicPagesTest extends TestCase
         $this->get('/')->assertOk();
     }
 
-    public function test_public_list_paginates_at_twelve_per_page(): void
+    public function test_berita_list_paginates_at_nine_per_page(): void
     {
         $category = Category::factory()->create();
         Post::factory()->create([
@@ -110,13 +110,13 @@ class PublicPagesTest extends TestCase
             'title' => 'Post Paling Lama',
             'published_at' => now()->subDays(60),
         ]);
-        Post::factory()->count(12)->create(['category_id' => $category->id, 'published_at' => now()->subDays(1)]);
+        Post::factory()->count(9)->create(['category_id' => $category->id, 'published_at' => now()->subDays(1)]);
 
-        $this->get('/')
+        $this->get('/berita')
             ->assertOk()
             ->assertDontSee('Post Paling Lama');
 
-        $this->get('/?page=2')
+        $this->get('/berita?page=2')
             ->assertOk()
             ->assertSee('Post Paling Lama');
     }
@@ -129,7 +129,7 @@ class PublicPagesTest extends TestCase
             'body' => "**Tebal** dan *miring*\n\n<script>alert('xss')</script>",
         ]);
 
-        $this->get('/baca/'.$post->slug)
+        $this->get('/berita/'.$post->slug)
             ->assertOk()
             ->assertSee('<strong>Tebal</strong>', false)
             ->assertSee('<em>miring</em>', false)

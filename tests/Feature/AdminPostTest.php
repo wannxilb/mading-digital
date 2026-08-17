@@ -34,7 +34,7 @@ class AdminPostTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->post('/admin/posts', $this->postPayload())
+            ->post('/admin/berita', $this->postPayload())
             ->assertRedirect();
 
         $this->assertDatabaseHas('posts', [
@@ -48,9 +48,9 @@ class AdminPostTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->from('/admin/posts/baru')
-            ->post('/admin/posts', [])
-            ->assertRedirect('/admin/posts/baru')
+            ->from('/admin/berita/baru')
+            ->post('/admin/berita', [])
+            ->assertRedirect('/admin/berita/baru')
             ->assertSessionHasErrors(['title', 'category_id', 'author', 'body']);
     }
 
@@ -60,7 +60,7 @@ class AdminPostTest extends TestCase
         $post = Post::factory()->create(['title' => 'Judul Lama']);
 
         $this->actingAs($admin)
-            ->put('/admin/posts/'.$post->id, $this->postPayload(['title' => 'Judul Baru']))
+            ->put('/admin/berita/'.$post->id, $this->postPayload(['title' => 'Judul Baru']))
             ->assertRedirect();
 
         $post->refresh();
@@ -74,10 +74,10 @@ class AdminPostTest extends TestCase
         $post = Post::factory()->create(['is_published' => true]);
 
         $this->actingAs($admin)
-            ->put('/admin/posts/'.$post->id, $this->postPayload(['title' => $post->title, 'is_published' => '0']))
+            ->put('/admin/berita/'.$post->id, $this->postPayload(['title' => $post->title, 'is_published' => '0']))
             ->assertRedirect();
 
-        $this->get('/baca/'.$post->refresh()->slug)->assertNotFound();
+        $this->get('/berita/'.$post->refresh()->slug)->assertNotFound();
     }
 
     public function test_admin_can_delete_post(): void
@@ -86,7 +86,7 @@ class AdminPostTest extends TestCase
         $post = Post::factory()->create();
 
         $this->actingAs($admin)
-            ->delete('/admin/posts/'.$post->id)
+            ->delete('/admin/berita/'.$post->id)
             ->assertRedirect();
 
         $this->assertDatabaseMissing('posts', ['id' => $post->id]);
@@ -99,7 +99,7 @@ class AdminPostTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->post('/admin/posts', $this->postPayload([
+            ->post('/admin/berita', $this->postPayload([
                 'image' => UploadedFile::fake()->image('sampul.jpg'),
             ]))
             ->assertRedirect();
@@ -110,7 +110,7 @@ class AdminPostTest extends TestCase
         Storage::disk('public')->assertExists($post->image);
 
         $this->actingAs($admin)
-            ->delete('/admin/posts/'.$post->id)
+            ->delete('/admin/berita/'.$post->id)
             ->assertRedirect();
 
         Storage::disk('public')->assertMissing($post->image);
@@ -121,11 +121,11 @@ class AdminPostTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($admin)
-            ->from('/admin/posts/baru')
-            ->post('/admin/posts', $this->postPayload([
+            ->from('/admin/berita/baru')
+            ->post('/admin/berita', $this->postPayload([
                 'image' => UploadedFile::fake()->create('dokumen.txt'),
             ]))
-            ->assertRedirect('/admin/posts/baru')
+            ->assertRedirect('/admin/berita/baru')
             ->assertSessionHasErrors('image');
     }
 
@@ -133,8 +133,8 @@ class AdminPostTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $this->actingAs($admin)->post('/admin/posts', $this->postPayload(['title' => 'Berita Sama']));
-        $this->actingAs($admin)->post('/admin/posts', $this->postPayload(['title' => 'Berita Sama']));
+        $this->actingAs($admin)->post('/admin/berita', $this->postPayload(['title' => 'Berita Sama']));
+        $this->actingAs($admin)->post('/admin/berita', $this->postPayload(['title' => 'Berita Sama']));
 
         $this->assertDatabaseHas('posts', ['title' => 'Berita Sama', 'slug' => 'berita-sama']);
         $this->assertDatabaseHas('posts', ['title' => 'Berita Sama', 'slug' => 'berita-sama-1']);
@@ -144,7 +144,7 @@ class AdminPostTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $this->actingAs($admin)->post('/admin/posts', $this->postPayload());
+        $this->actingAs($admin)->post('/admin/berita', $this->postPayload());
 
         $this->assertDatabaseHas('posts', ['title' => 'Cerita Baru', 'views' => 0]);
     }

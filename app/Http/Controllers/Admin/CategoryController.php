@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('posts')->orderBy('name')->get();
+        $categories = Category::withCount(['posts', 'articles'])->orderBy('name')->get();
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -20,7 +20,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:60'],
-            'icon' => ['required', 'string', 'in:megaphone,trophy,calendar,palette,book'],
+            'icon' => ['required', 'string', 'in:'.implode(',', $this->icons())],
             'description' => ['nullable', 'string', 'max:200'],
         ]);
 
@@ -35,7 +35,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:60'],
-            'icon' => ['required', 'string', 'in:megaphone,trophy,calendar,palette,book'],
+            'icon' => ['required', 'string', 'in:'.implode(',', $this->icons())],
             'description' => ['nullable', 'string', 'max:200'],
         ]);
 
@@ -48,13 +48,18 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->posts()->exists()) {
+        if ($category->posts()->exists() || $category->articles()->exists()) {
             return back()->with('error', 'Kategori masih memiliki konten. Pindahkan atau hapus kontennya dulu.');
         }
 
         $category->delete();
 
         return back()->with('success', 'Kategori berhasil dihapus.');
+    }
+
+    private function icons(): array
+    {
+        return ['megaphone', 'trophy', 'calendar', 'palette', 'book', 'sparkle', 'chart', 'users', 'pen', 'activity'];
     }
 
     private function uniqueSlug(string $slug, ?int $ignoreId = null): string

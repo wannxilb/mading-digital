@@ -112,6 +112,6 @@ class AdminCategoryTest extends TestCase
         $this->actingAs($admin)
             ->get('/admin/kategori')
             ->assertOk()
-            ->assertSee('3 cerita');
+            ->assertSee('3 berita');
     }
 }

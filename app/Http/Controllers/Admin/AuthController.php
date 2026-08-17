@@ -26,15 +26,20 @@ class AuthController extends Controller
                 ->withInput($request->except('password'));
         }
 
-        $request->session()->regenerate();
-
-        if (! Auth::user()->isAdmin()) {
+        if (! Auth::user()->is_active) {
             Auth::logout();
 
-            return back()->withErrors(['email' => 'Akun ini bukan akun admin.'])->withInput($request->except('password'));
+            return back()->withErrors(['email' => 'Akun ini dinonaktifkan. Hubungi admin sekolah.'])->withInput($request->except('password'));
         }
 
-        return redirect()->intended(route('admin.dashboard'));
+        $request->session()->regenerate();
+
+        return redirect()->intended(match (true) {
+            Auth::user()->isAdmin() => route('admin.dashboard'),
+            Auth::user()->isGuru() => route('guru.dashboard'),
+            Auth::user()->isSiswa() => route('siswa.dashboard'),
+            default => route('home'),
+        });
     }
 
     public function logout(Request $request)

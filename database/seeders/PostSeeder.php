@@ -14,7 +14,7 @@ class PostSeeder extends Seeder
 
         $posts = [
             [
-                'category_id' => $cat('pengumuman'),
+                'category_id' => $cat('pendidikan'),
                 'title' => 'Libur Tengah Semester: Mari Isi dengan Hal yang Bermakna',
                 'slug' => 'libur-tengah-semester',
                 'author' => 'Waka Kesiswaan',
@@ -54,7 +54,7 @@ class PostSeeder extends Seeder
                 'published_at' => now()->subDays(11),
             ],
             [
-                'category_id' => $cat('cerita'),
+                'category_id' => $cat('osis'),
                 'title' => 'Dari Canggung ke Kompak: Cerita Hari Pertama OSIS',
                 'slug' => 'cerita-hari-pertama-osis',
                 'author' => 'Rian (XII IPS 2)',
@@ -64,7 +64,7 @@ class PostSeeder extends Seeder
                 'published_at' => now()->subDays(14),
             ],
             [
-                'category_id' => $cat('pengumuman'),
+                'category_id' => $cat('ekstrakurikuler'),
                 'title' => 'Pendaftaran Kegiatan Ekstrakurikuler Semester Baru',
                 'slug' => 'pendaftaran-ekstrakurikuler',
                 'author' => 'Pembina OSIS',
@@ -104,7 +104,7 @@ class PostSeeder extends Seeder
                 'published_at' => now()->subDays(28),
             ],
             [
-                'category_id' => $cat('cerita'),
+                'category_id' => $cat('pendidikan'),
                 'title' => 'Pelajaran dari Kantin: Kisah Sederhana yang Berharga',
                 'slug' => 'pelajaran-dari-kantin',
                 'author' => 'Bu Yuli',

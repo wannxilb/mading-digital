@@ -1,69 +1,68 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelola Konten')
-@section('heading', 'Kelola Konten')
+@section('title', 'Kelola Berita')
+@section('heading', 'Kelola Berita')
 
 @section('content')
-    <div class="reveal rounded-3xl bg-white shadow-soft ring-1 ring-navy-900/5 overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-6 border-b border-navy-900/5">
-            <form method="GET" action="{{ route('admin.posts.index') }}" class="relative flex-1 max-w-sm">
-                <x-icon name="search" class="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-navy-900/35"/>
-                <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari judul atau penulis..."
-                       class="w-full rounded-xl border-0 bg-ice-50 pl-10 pr-4 py-2.5 text-sm font-medium text-navy-900 ring-1 ring-navy-900/10 placeholder:text-navy-900/35 focus:outline-none focus:ring-2 focus:ring-royal-500">
+    <div class="reveal card overflow-hidden border-2">
+        <div class="flex flex-col gap-4 border-b-2 border-ink/10 p-5 sm:flex-row sm:items-center">
+            <form method="GET" action="{{ route('admin.berita.index') }}" class="relative max-w-sm flex-1">
+                <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari judul atau penulis…" class="field !border-2 !py-2.5 pl-10" aria-label="Cari berita">
+                <x-icon name="search" class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-3"/>
             </form>
-            <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-navy-800 to-royal-600 px-4 py-2.5 text-sm font-bold text-white shadow-glow hover:opacity-95 transition-opacity">
+            <a href="{{ route('admin.berita.create') }}" class="btn-red shrink-0">
                 <x-icon name="plus" class="size-4"/>
-                Tulis Cerita
+                Tulis Berita
             </a>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead>
-                    <tr class="bg-ice-50/60 text-xs font-bold uppercase tracking-wider text-navy-900/45">
-                        <th class="px-6 py-4">Judul</th>
-                        <th class="px-6 py-4 hidden md:table-cell">Kategori</th>
-                        <th class="px-6 py-4 hidden sm:table-cell">Status</th>
-                        <th class="px-6 py-4 text-right hidden lg:table-cell">Dibaca</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                    <tr class="border-b-2 border-ink bg-paper">
+                        <th class="table-th">Judul</th>
+                        <th class="table-th hidden md:table-cell">Kategori</th>
+                        <th class="table-th hidden sm:table-cell">Status</th>
+                        <th class="table-th hidden text-right lg:table-cell">Dibaca</th>
+                        <th class="table-th text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-navy-900/5">
+                <tbody class="divide-y-2 divide-ink/10">
                     @forelse ($posts as $post)
-                        <tr class="hover:bg-ice-50/40 transition-colors">
-                            <td class="px-6 py-4">
-                                <p class="font-bold text-navy-900 line-clamp-1 max-w-xs">{{ $post->title }}</p>
-                                <p class="mt-1 text-xs text-navy-900/45">{{ $post->author }} · {{ $post->display_date }}</p>
+                        <tr class="transition-colors hover:bg-paper/60">
+                            <td class="px-5 py-4">
+                                <p class="max-w-xs font-bold text-ink line-clamp-1">{{ $post->title }}</p>
+                                <p class="mt-1 text-xs font-semibold text-ink-3">{{ $post->author }} · {{ $post->display_date }}</p>
                             </td>
-                            <td class="px-6 py-4 hidden md:table-cell">
-                                <span class="inline-flex items-center gap-1.5 rounded-full bg-ice-100 px-3 py-1 text-xs font-bold text-navy-800">
-                                    <x-icon :name="$post->category?->icon ?? 'sparkle'" class="size-3.5 text-royal-600"/>
+                            <td class="px-5 py-4 hidden md:table-cell">
+                                <span class="chip !border-ink/15">
+                                    <x-icon :name="$post->category?->icon ?? 'sparkle'" class="size-3.5 text-accent"/>
                                     {{ $post->category?->name }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 hidden sm:table-cell">
+                            <td class="px-5 py-4 hidden sm:table-cell">
                                 @if ($post->is_published)
-                                    <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-600 ring-1 ring-emerald-200">Tampil</span>
+                                    <span class="tag-green">Tampil</span>
                                 @else
-                                    <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-600 ring-1 ring-amber-200">Draft</span>
+                                    <span class="tag-amber">Draft</span>
                                 @endif
                                 @if ($post->is_featured)
-                                    <span class="ml-1.5 rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-600 ring-1 ring-sky-200">Unggulan</span>
+                                    <span class="tag-ink ml-1">Unggulan</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right text-xs font-semibold text-navy-900/55 hidden lg:table-cell">{{ number_format($post->views) }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-5 py-4 text-right text-xs font-semibold text-ink-2 hidden lg:table-cell">{{ number_format($post->views) }}</td>
+                            <td class="px-5 py-4">
                                 <div class="flex items-center justify-end gap-1.5">
-                                    <a href="{{ route('post.show', $post) }}" target="_blank" class="grid place-items-center size-8 rounded-lg bg-ice-100 text-navy-800 hover:bg-sky-100 transition-colors" title="Lihat">
+                                    <a href="{{ route('berita.show', $post) }}" class="grid size-8 place-items-center rounded-brutal border-2 border-ink bg-cream text-ink transition-colors hover:bg-acid" title="Lihat">
                                         <x-icon name="eye" class="size-3.5"/>
                                     </a>
-                                    <a href="{{ route('admin.posts.edit', $post) }}" class="grid place-items-center size-8 rounded-lg bg-ice-100 text-navy-800 hover:bg-royal-600 hover:text-white transition-colors" title="Edit">
+                                    <a href="{{ route('admin.berita.edit', $post) }}" class="grid size-8 place-items-center rounded-brutal border-2 border-ink bg-cream text-ink transition-colors hover:bg-acid" title="Edit">
                                         <x-icon name="edit" class="size-3.5"/>
                                     </a>
-                                    <form method="POST" action="{{ route('admin.posts.destroy', $post) }}" onsubmit="return confirm('Hapus konten ini? Tindakan tidak bisa dibatalkan.')">
+                                    <form method="POST" action="{{ route('admin.berita.destroy', $post) }}" onsubmit="return confirm('Hapus berita ini? Tindakan tidak bisa dibatalkan.')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="grid place-items-center size-8 rounded-lg bg-ice-100 text-red-600 hover:bg-red-600 hover:text-white transition-colors" title="Hapus">
+                                        <button type="submit" class="grid size-8 place-items-center rounded-brutal border-2 border-accent bg-cream text-accent transition-colors hover:bg-accent hover:text-cream" title="Hapus">
                                             <x-icon name="trash" class="size-3.5"/>
                                         </button>
                                     </form>
@@ -72,14 +71,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-16 text-center">
-                                <x-icon name="folder" class="mx-auto size-10 text-royal-500/40"/>
-                                <p class="mt-3 font-bold text-navy-900">Belum ada konten</p>
-                                <p class="mt-1 text-sm text-navy-900/50">Mulai tulis cerita pertama untuk papan mading.</p>
-                                <a href="{{ route('admin.posts.create') }}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-navy-900 px-4 py-2.5 text-xs font-bold text-white hover:bg-navy-800">
-                                    <x-icon name="plus" class="size-3.5"/>
-                                    Tulis Cerita
-                                </a>
+                            <td colspan="5" class="px-5 py-16 text-center">
+                                <x-icon name="book" class="mx-auto size-10 text-ink-3"/>
+                                <p class="mt-3 font-display font-bold text-ink">Belum ada berita</p>
+                                <p class="mt-1 text-sm text-ink-2">Mulai tulis berita pertama untuk papan mading.</p>
+                                <a href="{{ route('admin.berita.create') }}" class="btn-ink mt-5">Tulis Berita</a>
                             </td>
                         </tr>
                     @endforelse
@@ -87,7 +83,7 @@
             </table>
         </div>
 
-        <div class="p-6 border-t border-navy-900/5">
+        <div class="border-t-2 border-ink/10 p-5">
             {{ $posts->links() }}
         </div>
     </div>

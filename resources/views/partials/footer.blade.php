@@ -1,47 +1,56 @@
-<footer class="mt-20 border-t border-navy-900/10 bg-white">
+<footer class="mt-20 border-t-2 border-ink bg-ink text-paper">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 py-12">
-        <div class="flex flex-col md:flex-row md:items-start gap-8 md:justify-between">
-            <div class="max-w-sm">
+        <div class="grid gap-10 md:grid-cols-12 md:gap-8">
+            <div class="md:col-span-5">
                 <div class="flex items-center gap-3">
-                    <span class="grid place-items-center size-10 rounded-xl bg-gradient-to-br from-navy-800 to-royal-600 text-white">
-                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 19a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2"/>
-                            <path d="M5 17V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12"/>
-                            <path d="M9 8h6M9 12h4"/>
-                        </svg>
-                    </span>
-                    <span class="font-display font-extrabold text-lg text-navy-900">Mading Digital</span>
+                    @php $logo = \App\Models\Setting::get('logo_path'); @endphp
+                    @if ($logo)
+                        <img src="{{ asset('storage/'.$logo) }}" alt="Logo" class="size-10 shrink-0 rounded-brutal border-2 border-cream/80 object-contain bg-cream/10">
+                    @else
+                        <span class="grid size-10 shrink-0 place-items-center rounded-brutal border-2 border-cream/80 bg-accent font-display text-sm font-bold text-cream">
+                            MD
+                        </span>
+                    @endif
+                    <div>
+                        <p class="font-display text-lg font-bold text-cream">{{ \App\Models\Setting::get('site_name', 'Mading Digital') }}</p>
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream/50">{{ \App\Models\Setting::get('site_tagline', 'Majalah Dinding Sekolah') }}</p>
+                    </div>
                 </div>
-                <p class="mt-4 text-sm leading-relaxed text-navy-900/60">
-                    Majalah dinding digital sekolah. Tempat berbagi pengumuman, prestasi, dan cerita dari perjalanan kita bersama di sekolah.
+                <p class="mt-4 max-w-sm text-sm leading-relaxed text-cream/60">
+                    {{ \App\Models\Setting::get('site_description', 'Pengumuman, berita, karya siswa, agenda, dan prestasi — dalam satu tempat yang bisa diakses kapan saja.') }}
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-10 sm:gap-16">
+            <div class="grid grid-cols-2 gap-8 sm:grid-cols-4 md:col-span-7">
                 <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-navy-900/50">Jelajahi</h3>
-                    <ul class="mt-4 space-y-2.5 text-sm font-medium text-navy-800">
-                        <li><a href="{{ route('home') }}#pengumuman" class="hover:text-royal-600 transition-colors">Papan Info</a></li>
-                        <li><a href="{{ route('home') }}#prestasi" class="hover:text-royal-600 transition-colors">Prestasi</a></li>
-                        <li><a href="{{ route('home') }}#kegiatan" class="hover:text-royal-600 transition-colors">Kegiatan</a></li>
-                        <li><a href="{{ route('home') }}#karya" class="hover:text-royal-600 transition-colors">Karya &amp; Kreativitas</a></li>
+                    <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-cream/40">Rubrik</h3>
+                    <ul class="mt-3 space-y-2 text-sm font-semibold text-cream/70">
+                        <li><a href="{{ route('berita.index') }}" class="hover:text-cream">Berita</a></li>
+                        <li><a href="{{ route('artikel.index') }}" class="hover:text-cream">Artikel</a></li>
+                        <li><a href="{{ route('pengumuman.index') }}" class="hover:text-cream">Pengumuman</a></li>
+                        <li><a href="{{ route('prestasi.index') }}" class="hover:text-cream">Prestasi</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-navy-900/50">Lainnya</h3>
-                    <ul class="mt-4 space-y-2.5 text-sm font-medium text-navy-800">
-                        <li><a href="{{ route('admin.login') }}" class="hover:text-royal-600 transition-colors">Masuk Admin</a></li>
-                        <li><a href="{{ route('home') }}#semua" class="hover:text-royal-600 transition-colors">Semua Konten</a></li>
+                    <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-cream/40">Informasi</h3>
+                    <ul class="mt-3 space-y-2 text-sm font-semibold text-cream/70">
+                        <li><a href="{{ route('agenda.index') }}" class="hover:text-cream">Agenda Sekolah</a></li>
+                        <li><a href="{{ route('tentang') }}" class="hover:text-cream">Tentang Mading</a></li>
+                        <li><a href="{{ route('cari.index') }}" class="hover:text-cream">Cari Konten</a></li>
+                        <li><a href="{{ route('admin.login') }}" class="hover:text-cream">Masuk Admin</a></li>
                     </ul>
+                </div>
+                <div class="col-span-2 sm:col-span-2">
+                    <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-cream/40">Pengelola</h3>
+                    <p class="mt-3 text-sm leading-relaxed text-cream/60">
+                        Dikelola oleh tim redaksi mading sekolah. Punya karya atau berita? Hubungi guru pembina.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="mt-10 pt-6 border-t border-navy-900/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-navy-900/50">
-            <p>&copy; {{ date('Y') }} {{ config('app.name', 'Mading Digital') }}. Dibuat dengan semangat di sekolah kita.</p>
-            <p class="inline-flex items-center gap-1.5">
-                Setiap perjalanan dimulai dengan langkah pertama.
-            </p>
+        <div class="mt-10 border-t border-cream/10 pt-6 text-xs text-cream/40">
+            &copy; {{ date('Y') }} {{ \App\Models\Setting::get('site_name', config('app.name', 'Mading Digital')) }}.
         </div>
     </div>
 </footer>

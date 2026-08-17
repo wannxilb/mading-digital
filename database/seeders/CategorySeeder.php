@@ -10,11 +10,16 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Pengumuman', 'slug' => 'pengumuman', 'icon' => 'megaphone', 'description' => 'Informasi penting dari sekolah untuk seluruh warga sekolah.'],
+            ['name' => 'Akademik', 'slug' => 'akademik', 'icon' => 'book', 'description' => 'Informasi seputar pembelajaran, ujian, dan kegiatan akademik.'],
+            ['name' => 'Kegiatan Sekolah', 'slug' => 'kegiatan', 'icon' => 'calendar', 'description' => 'Agenda dan momen seru sepanjang perjalanan sekolah.'],
+            ['name' => 'OSIS', 'slug' => 'osis', 'icon' => 'users', 'description' => 'Kabar dari organisasi siswa intra sekolah.'],
+            ['name' => 'Ekstrakurikuler', 'slug' => 'ekstrakurikuler', 'icon' => 'activity', 'description' => 'Informasi kegiatan pengembangan minat dan bakat siswa.'],
             ['name' => 'Prestasi', 'slug' => 'prestasi', 'icon' => 'trophy', 'description' => 'Kabar membanggakan dari siswa dan guru.'],
-            ['name' => 'Kegiatan', 'slug' => 'kegiatan', 'icon' => 'calendar', 'description' => 'Agenda dan momen seru sepanjang perjalanan sekolah.'],
-            ['name' => 'Karya & Kreativitas', 'slug' => 'karya', 'icon' => 'palette', 'description' => 'Ruang untuk menampilkan karya dan ide kreatif siswa.'],
-            ['name' => 'Cerita Sekolah', 'slug' => 'cerita', 'icon' => 'book', 'description' => 'Kisah perjalanan, pengalaman, dan refleksi warga sekolah.'],
+            ['name' => 'Teknologi', 'slug' => 'teknologi', 'icon' => 'sparkle', 'description' => 'Kabar seputar teknologi, robotik, dan literasi digital.'],
+            ['name' => 'Seni', 'slug' => 'seni', 'icon' => 'palette', 'description' => 'Ruang apresiasi seni, musik, dan kreativitas.'],
+            ['name' => 'Olahraga', 'slug' => 'olahraga', 'icon' => 'chart', 'description' => 'Perkembangan cabang olahraga dan kompetisi siswa.'],
+            ['name' => 'Pendidikan', 'slug' => 'pendidikan', 'icon' => 'megaphone', 'description' => 'Pengumuman penting dan informasi resmi sekolah.'],
+            ['name' => 'Karya Siswa', 'slug' => 'karya', 'icon' => 'pen', 'description' => 'Ruang untuk menampilkan karya dan tulisan siswa.'],
         ];
 
         foreach ($categories as $category) {
