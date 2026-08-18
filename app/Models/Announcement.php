@@ -20,6 +20,7 @@ class Announcement extends Model
         'end_date',
         'is_pinned',
         'status',
+        'review_note',
         'created_by',
     ];
 
@@ -39,11 +40,14 @@ class Announcement extends Model
 
     public const STATUS_DRAFT = 'draft';
 
+    public const STATUS_PENDING = 'pending';
+
     public const STATUS_ARSIP = 'arsip';
 
     public const STATUSES = [
         self::STATUS_AKTIF => 'Aktif',
         self::STATUS_DRAFT => 'Draft',
+        self::STATUS_PENDING => 'Menunggu Review',
         self::STATUS_ARSIP => 'Arsip',
     ];
 
@@ -64,6 +68,11 @@ class Announcement extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_AKTIF);
+    }
+
+    public function scopePendingReview(Builder $query): Builder
+    {
+        return $query->where('status', self::STATUS_PENDING);
     }
 
     public function scopeWithinDateWindow(Builder $query): Builder

@@ -12,17 +12,17 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Pak Dedi',
-                'email' => 'guru.dedi@mading.sch.id',
+                'email' => 'admin.dedi@mading.sch.id',
                 'password' => bcrypt('password'),
-                'role' => 'guru',
+                'role' => 'admin',
                 'class' => null,
                 'is_active' => true,
             ],
             [
                 'name' => 'Bu Budiarti',
-                'email' => 'guru.budi@mading.sch.id',
+                'email' => 'admin.budi@mading.sch.id',
                 'password' => bcrypt('password'),
-                'role' => 'guru',
+                'role' => 'admin',
                 'class' => null,
                 'is_active' => true,
             ],

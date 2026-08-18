@@ -20,6 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nis',
+        'jurusan',
         'email',
         'password',
         'role',
@@ -27,14 +29,19 @@ class User extends Authenticatable
         'is_active',
     ];
 
+    public const JURUSAN = [
+        'mplb' => 'Manajemen Perkantoran',
+        'rpl' => 'Rekayasa Perangkat Lunak',
+        'akl' => 'Akuntansi',
+        'bd' => 'Bisnis Digital',
+        'dkv' => 'Desain Komunikasi Visual',
+        'pf' => 'Perfilman',
+        'dpb' => 'Desain dan Produksi Busana',
+    ];
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
-    }
-
-    public function isGuru(): bool
-    {
-        return $this->role === 'guru';
     }
 
     public function isSiswa(): bool
@@ -45,10 +52,14 @@ class User extends Authenticatable
     public function getRoleLabelAttribute(): string
     {
         return match ($this->role) {
-            'admin' => 'Admin',
-            'guru' => 'Guru / Pembina',
+            'admin' => 'Admin / Guru Pembina',
             default => 'Siswa',
         };
+    }
+
+    public function getJurusanLabelAttribute(): ?string
+    {
+        return self::JURUSAN[$this->jurusan] ?? $this->jurusan;
     }
 
     /**

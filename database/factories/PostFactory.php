@@ -23,6 +23,7 @@ class PostFactory extends Factory
             'author' => fake()->name(),
             'excerpt' => fake()->paragraph(1),
             'body' => fake()->paragraphs(4, true),
+            'status' => Post::STATUS_PUBLISHED,
             'is_published' => true,
             'is_featured' => false,
             'views' => fake()->numberBetween(0, 200),

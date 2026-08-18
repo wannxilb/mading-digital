@@ -4,7 +4,7 @@
 @section('heading', 'Edit Pengguna')
 
 @section('content')
-    <form method="POST" action="{{ route('admin.pengguna.update', $user) }}" class="max-w-2xl">
+    <form method="POST" action="{{ route('admin.pengguna.update', $user) }}" class="mx-auto max-w-2xl">
         @csrf
         @method('PUT')
 
@@ -21,6 +21,12 @@
                 <label for="email" class="label">Email</label>
                 <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="field mt-2">
                 @error('email')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="mt-5">
+                <label for="nis" class="label">NIS <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
+                <input type="text" id="nis" name="nis" value="{{ old('nis', $user->nis) }}" placeholder="cth: 2026001" class="field mt-2">
+                @error('nis')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
             </div>
 
             <div class="mt-5 grid gap-5 sm:grid-cols-2">
@@ -42,13 +48,29 @@
                 </div>
                 <div>
                     <label for="class" class="label">Kelas <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
-                    <input type="text" id="class" name="class" value="{{ old('class', $user->class) }}" placeholder="cth: X IPA 1" class="field mt-2">
+                    <input type="text" id="class" name="class" value="{{ old('class', $user->class) }}" placeholder="cth: 12 RPL 2" class="field mt-2">
                 </div>
             </div>
 
             <div class="mt-5">
+                <label for="jurusan" class="label">Jurusan <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
+                <select id="jurusan" name="jurusan" class="field mt-2">
+                    <option value="">Pilih jurusan</option>
+                    @foreach (\App\Models\User::JURUSAN as $key => $label)
+                        <option value="{{ $key }}" {{ old('jurusan', $user->jurusan) === $key ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mt-5">
                 <label for="password" class="label">Password Baru <span class="font-normal normal-case text-ink-3">(kosongkan jika tidak diganti)</span></label>
-                <input type="password" id="password" name="password" class="field mt-2" minlength="8">
+                <div class="relative mt-2">
+                    <input type="password" id="password" name="password" class="field !pr-11" minlength="8">
+                    <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 grid size-8 place-items-center rounded-brutal text-ink-3 transition-colors hover:text-ink" aria-label="Tampilkan sandi">
+                        <x-icon name="eye" class="size-[18px] eye-open"/>
+                        <x-icon name="eye-off" class="size-[18px] eye-closed hidden"/>
+                    </button>
+                </div>
                 @error('password')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
             </div>
 

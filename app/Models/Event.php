@@ -31,6 +31,15 @@ class Event extends Model
 
     public const STATUS_SELESAI = 'selesai';
 
+    public const STATUS_ARSIP = 'arsip';
+
+    public const STATUSES = [
+        self::STATUS_AKAN_DATANG => 'Akan Datang',
+        self::STATUS_BERLANGSUNG => 'Berlangsung',
+        self::STATUS_SELESAI => 'Selesai',
+        self::STATUS_ARSIP => 'Arsip',
+    ];
+
     protected function casts(): array
     {
         return [

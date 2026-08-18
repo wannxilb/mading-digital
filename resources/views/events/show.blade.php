@@ -61,7 +61,7 @@
 
         @if ($event->description)
             <div class="prose-wrap mt-10">
-                {!! Str::markdown($event->description) !!}
+                {!! Str::markdown($event->description, ['html_input' => 'strip']) !!}
             </div>
         @endif
     </article>

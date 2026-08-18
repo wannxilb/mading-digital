@@ -51,6 +51,10 @@
                             <x-icon name="globe" class="size-4.5"/>
                             Lihat Situs Publik
                         </a>
+                        <a href="{{ route('siswa.profil.edit') }}" class="flex items-center gap-3 rounded-brutal px-4 py-2.5 text-sm font-bold transition-colors {{ request()->routeIs('siswa.profil.*') ? 'bg-acid text-ink' : 'text-cream/70 hover:bg-cream/10 hover:text-cream' }}">
+                            <x-icon name="users" class="size-4.5"/>
+                            Edit Profil
+                        </a>
                     </nav>
 
                     <div class="border-t-2 border-cream/15 p-3">
@@ -58,7 +62,7 @@
                             <span class="grid size-9 shrink-0 place-items-center rounded-brutal bg-acid font-display text-sm font-bold text-ink">{{ Str::upper(Str::substr(auth()->user()->name, 0, 1)) }}</span>
                             <div class="min-w-0 flex-1">
                                 <p class="truncate text-sm font-bold text-cream">{{ auth()->user()->name }}</p>
-                                <p class="truncate text-[11px] text-cream/50">{{ auth()->user()->class ?? 'Siswa' }}</p>
+                                <p class="truncate text-[11px] text-cream/50">{{ auth()->user()->jurusan_label ?? auth()->user()->class ?? 'Siswa' }}</p>
                             </div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

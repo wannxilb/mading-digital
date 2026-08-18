@@ -1,5 +1,5 @@
 <nav id="site-nav" class="fixed inset-x-0 top-0 z-40">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
         <div class="mt-0 flex items-center justify-between gap-4 px-3 sm:px-4 transition-all duration-300">
             <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-3 py-4">
                 @php $logo = \App\Models\Setting::get('logo_path'); @endphp
@@ -22,6 +22,7 @@
                 <a href="{{ route('artikel.index') }}" class="rounded-brutal px-3.5 py-2 text-sm font-bold text-ink transition-colors hover:bg-blue hover:text-cream {{ request()->routeIs('artikel.*') ? 'bg-blue text-cream' : '' }}">Artikel</a>
                 <a href="{{ route('agenda.index') }}" class="rounded-brutal px-3.5 py-2 text-sm font-bold text-ink transition-colors hover:bg-blue hover:text-cream {{ request()->routeIs('agenda.*') ? 'bg-blue text-cream' : '' }}">Agenda</a>
                 <a href="{{ route('prestasi.index') }}" class="rounded-brutal px-3.5 py-2 text-sm font-bold text-ink transition-colors hover:bg-blue hover:text-cream {{ request()->routeIs('prestasi.*') ? 'bg-blue text-cream' : '' }}">Prestasi</a>
+                <a href="{{ route('pengumuman.index') }}" class="rounded-brutal px-3.5 py-2 text-sm font-bold text-ink transition-colors hover:bg-blue hover:text-cream {{ request()->routeIs('pengumuman.*') ? 'bg-blue text-cream' : '' }}">Pengumuman</a>
                 <a href="{{ route('tentang') }}" class="rounded-brutal px-3.5 py-2 text-sm font-bold text-ink transition-colors hover:bg-blue hover:text-cream {{ request()->routeIs('tentang') ? 'bg-blue text-cream' : '' }}">Tentang</a>
             </div>
 
@@ -35,11 +36,6 @@
                         <a href="{{ route('admin.dashboard') }}" class="btn-ink hidden sm:inline-flex">
                             <x-icon name="layout" class="size-4"/>
                             Panel Admin
-                        </a>
-                    @elseif (auth()->user()->isGuru())
-                        <a href="{{ route('guru.dashboard') }}" class="btn-ink hidden sm:inline-flex">
-                            <x-icon name="layout" class="size-4"/>
-                            Panel Guru
                         </a>
                     @elseif (auth()->user()->isSiswa())
                         <a href="{{ route('siswa.dashboard') }}" class="btn-ink hidden sm:inline-flex">
@@ -80,6 +76,7 @@
                 <a href="{{ route('artikel.index') }}" class="rounded-brutal bg-paper px-4 py-3 text-sm font-bold text-ink {{ request()->routeIs('artikel.*') ? 'bg-blue text-cream' : '' }}">Artikel</a>
                 <a href="{{ route('agenda.index') }}" class="rounded-brutal bg-paper px-4 py-3 text-sm font-bold text-ink {{ request()->routeIs('agenda.*') ? 'bg-blue text-cream' : '' }}">Agenda</a>
                 <a href="{{ route('prestasi.index') }}" class="rounded-brutal bg-paper px-4 py-3 text-sm font-bold text-ink {{ request()->routeIs('prestasi.*') ? 'bg-blue text-cream' : '' }}">Prestasi</a>
+                <a href="{{ route('pengumuman.index') }}" class="rounded-brutal bg-paper px-4 py-3 text-sm font-bold text-ink {{ request()->routeIs('pengumuman.*') ? 'bg-blue text-cream' : '' }}">Pengumuman</a>
                 <a href="{{ route('tentang') }}" class="rounded-brutal bg-paper px-4 py-3 text-sm font-bold text-ink {{ request()->routeIs('tentang') ? 'bg-blue text-cream' : '' }}">Tentang</a>
             </div>
             <div class="mt-2 grid gap-1.5 border-t-2 border-ink/10 pt-3">
@@ -87,8 +84,6 @@
                 @auth
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="btn-ink">Panel Admin</a>
-                    @elseif (auth()->user()->isGuru())
-                        <a href="{{ route('guru.dashboard') }}" class="btn-ink">Panel Guru</a>
                     @elseif (auth()->user()->isSiswa())
                         <a href="{{ route('siswa.dashboard') }}" class="btn-ink">Portal Siswa</a>
                     @else

@@ -23,10 +23,27 @@ class Post extends Model
         'excerpt',
         'body',
         'image',
+        'status',
+        'review_note',
         'is_published',
         'is_featured',
         'views',
         'published_at',
+    ];
+
+    public const STATUS_DRAFT = 'draft';
+
+    public const STATUS_REVIEW = 'review';
+
+    public const STATUS_PUBLISHED = 'published';
+
+    public const STATUS_ARCHIVED = 'archived';
+
+    public const STATUSES = [
+        self::STATUS_DRAFT => 'Draft',
+        self::STATUS_REVIEW => 'Menunggu Review',
+        self::STATUS_PUBLISHED => 'Published',
+        self::STATUS_ARCHIVED => 'Archived',
     ];
 
     protected function casts(): array
@@ -45,12 +62,22 @@ class Post extends Model
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('is_published', true);
+        return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function scopePendingReview(Builder $query): Builder
+    {
+        return $query->where('status', self::STATUS_REVIEW);
     }
 
     public function scopeFeatured(Builder $query): Builder
     {
         return $query->where('is_featured', true);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUSES[$this->status] ?? $this->status;
     }
 
     public function getDisplayDateAttribute(): string
@@ -65,7 +92,7 @@ class Post extends Model
         return Cache::remember(
             'post_html_'.$this->id.'_'.$this->updated_at?->timestamp,
             now()->addDays(7),
-            fn () => Str::markdown($this->body),
+            fn () => Str::markdown($this->body, ['html_input' => 'strip']),
         );
     }
 }

@@ -37,7 +37,11 @@ class PostController extends Controller
     {
         $data = $this->validated($request);
 
-        Post::create($data);
+        $post = Post::create($data);
+
+        if ($request->boolean('is_published')) {
+            $post->update(['status' => Post::STATUS_PUBLISHED, 'published_at' => now()]);
+        }
 
         return redirect()
             ->route('admin.berita.index')
@@ -84,6 +88,8 @@ class PostController extends Controller
             'author' => ['required', 'string', 'max:120'],
             'excerpt' => ['nullable', 'string', 'max:300'],
             'body' => ['required', 'string'],
+            'status' => ['nullable', 'in:'.implode(',', array_keys(Post::STATUSES))],
+            'review_note' => ['nullable', 'string', 'max:1000'],
             'is_published' => ['nullable', 'boolean'],
             'is_featured' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:4096'],
@@ -108,9 +114,20 @@ class PostController extends Controller
         }
 
         if (! $post) {
+            $data['status'] = $data['is_published'] ? Post::STATUS_PUBLISHED : Post::STATUS_DRAFT;
             $data['published_at'] = $data['is_published'] ? now() : null;
-        } elseif ($data['is_published'] && ! $post->published_at) {
-            $data['published_at'] = now();
+        } else {
+            if (isset($data['status'])) {
+                // Admin can manually set status on update
+            } elseif ($data['is_published'] && $post->status !== Post::STATUS_PUBLISHED) {
+                $data['status'] = Post::STATUS_PUBLISHED;
+            } elseif (! $data['is_published'] && $post->status === Post::STATUS_PUBLISHED) {
+                $data['status'] = Post::STATUS_DRAFT;
+            }
+
+            if (($data['status'] ?? $post->status) === Post::STATUS_PUBLISHED && ! $post->published_at) {
+                $data['published_at'] = now();
+            }
         }
 
         return $data;

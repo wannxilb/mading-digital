@@ -6,7 +6,7 @@
 @section('heading', isset($achievement) ? 'Edit Prestasi' : 'Tambah Prestasi')
 
 @section('content')
-    <form method="POST" action="{{ isset($achievement) ? route('admin.prestasi.update', $achievement) : route('admin.prestasi.store') }}" enctype="multipart/form-data" class="max-w-3xl">
+    <form method="POST" action="{{ isset($achievement) ? route('admin.prestasi.update', $achievement) : route('admin.prestasi.store') }}" enctype="multipart/form-data" class="mx-auto max-w-3xl">
         @csrf
         @if (isset($achievement))
             @method('PUT')

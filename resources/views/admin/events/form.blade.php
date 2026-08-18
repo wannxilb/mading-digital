@@ -6,7 +6,7 @@
 @section('heading', isset($event) ? 'Edit Agenda' : 'Tambah Agenda')
 
 @section('content')
-    <form method="POST" action="{{ isset($event) ? route('admin.agenda.update', $event) : route('admin.agenda.store') }}" enctype="multipart/form-data" class="max-w-3xl">
+    <form method="POST" action="{{ isset($event) ? route('admin.agenda.update', $event) : route('admin.agenda.store') }}" enctype="multipart/form-data" class="mx-auto max-w-3xl">
         @csrf
         @if (isset($event))
             @method('PUT')

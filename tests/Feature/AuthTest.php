@@ -42,13 +42,13 @@ class AuthTest extends TestCase
         $this->assertAuthenticated();
     }
 
-    public function test_teacher_login_redirects_to_dashboard(): void
+    public function test_unknown_role_login_redirects_to_home(): void
     {
-        User::factory()->create(['email' => 'guru@example.com', 'role' => 'guru']);
+        User::factory()->create(['email' => 'guru@example.com', 'role' => 'siswa']);
 
         $this->from('/admin/login')
             ->post('/admin/login', ['email' => 'guru@example.com', 'password' => 'password'])
-            ->assertRedirect('/guru');
+            ->assertRedirect('/siswa');
 
         $this->assertAuthenticated();
     }
@@ -64,7 +64,7 @@ class AuthTest extends TestCase
     {
         $student = User::factory()->create(['role' => 'siswa']);
 
-        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/pengumuman', '/admin/agenda', '/admin/prestasi', '/admin/kategori', '/admin/pengguna'] as $path) {
+        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/pengumuman', '/admin/agenda', '/admin/prestasi', '/admin/kategori', '/admin/pengguna', '/admin/pengguna/import'] as $path) {
             $this->actingAs($student)->get($path)->assertForbidden();
         }
     }
@@ -73,7 +73,7 @@ class AuthTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/artikel/baru', '/admin/pengumuman', '/admin/pengumuman/baru', '/admin/agenda', '/admin/agenda/baru', '/admin/prestasi', '/admin/prestasi/baru', '/admin/kategori', '/admin/pengguna', '/admin/pengguna/baru'] as $path) {
+        foreach (['/admin', '/admin/berita', '/admin/berita/baru', '/admin/artikel', '/admin/artikel/baru', '/admin/pengumuman', '/admin/pengumuman/baru', '/admin/agenda', '/admin/agenda/baru', '/admin/prestasi', '/admin/prestasi/baru', '/admin/kategori', '/admin/pengguna', '/admin/pengguna/baru', '/admin/pengguna/import'] as $path) {
             $this->actingAs($admin)->get($path)->assertOk();
         }
     }

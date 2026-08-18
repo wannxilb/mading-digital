@@ -6,7 +6,7 @@
 @section('heading', isset($post) ? 'Edit Berita' : 'Tulis Berita')
 
 @section('content')
-    <form method="POST" action="{{ isset($post) ? route('admin.berita.update', $post) : route('admin.berita.store') }}" enctype="multipart/form-data" class="max-w-4xl">
+    <form method="POST" action="{{ isset($post) ? route('admin.berita.update', $post) : route('admin.berita.store') }}" enctype="multipart/form-data" class="mx-auto max-w-4xl">
         @csrf
         @if (isset($post))
             @method('PUT')

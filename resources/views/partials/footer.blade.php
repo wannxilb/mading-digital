@@ -23,12 +23,13 @@
 
             <div class="grid grid-cols-2 gap-8 sm:grid-cols-4 md:col-span-7">
                 <div>
-                    <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-cream/40">Rubrik</h3>
+                    <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-cream/40">Link Cepat</h3>
                     <ul class="mt-3 space-y-2 text-sm font-semibold text-cream/70">
                         <li><a href="{{ route('berita.index') }}" class="hover:text-cream">Berita</a></li>
                         <li><a href="{{ route('artikel.index') }}" class="hover:text-cream">Artikel</a></li>
                         <li><a href="{{ route('pengumuman.index') }}" class="hover:text-cream">Pengumuman</a></li>
                         <li><a href="{{ route('prestasi.index') }}" class="hover:text-cream">Prestasi</a></li>
+                        <li><a href="{{ route('agenda.index') }}" class="hover:text-cream">Agenda</a></li>
                     </ul>
                 </div>
                 <div>

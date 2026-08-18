@@ -77,4 +77,23 @@ class SettingController extends Controller
 
         return back()->with('success', 'Pengaturan situs berhasil diperbarui.');
     }
+
+    public function destroyImage(string $key)
+    {
+        $allowed = ['favicon_path', 'logo_path', 'hero_image_path'];
+
+        if (! in_array($key, $allowed)) {
+            abort(404);
+        }
+
+        $path = Setting::get($key);
+
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        Setting::set($key, null);
+
+        return back()->with('success', 'Gambar berhasil dihapus.');
+    }
 }

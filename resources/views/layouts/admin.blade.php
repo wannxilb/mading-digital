@@ -22,11 +22,16 @@
                 <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full border-r-2 border-ink bg-ink text-cream transition-transform duration-300 lg:translate-x-0 lg:static lg:sticky lg:top-0 lg:h-screen">
                     <div class="flex h-full flex-col">
                         <div class="flex items-center gap-3 border-b-2 border-cream/15 px-5 py-5">
-                            <span class="grid size-10 shrink-0 place-items-center rounded-brutal border-2 border-cream bg-accent font-display text-lg font-bold text-cream">
-                                MD
-                            </span>
+                            @php $logo = \App\Models\Setting::get('logo_path'); @endphp
+                            @if ($logo)
+                                <img src="{{ asset('storage/'.$logo) }}" alt="Logo" class="size-10 shrink-0 rounded-brutal border-2 border-cream object-contain bg-cream/10">
+                            @else
+                                <span class="grid size-10 shrink-0 place-items-center rounded-brutal border-2 border-cream bg-accent font-display text-lg font-bold text-cream">
+                                    MD
+                                </span>
+                            @endif
                             <div class="min-w-0">
-                                <p class="font-display text-sm font-bold leading-tight">Mading Digital</p>
+                                <p class="font-display text-sm font-bold leading-tight">{{ \App\Models\Setting::get('site_name', 'Mading Digital') }}</p>
                                 <p class="text-[11px] font-semibold uppercase tracking-widest text-cream/50">Panel Pengelola</p>
                             </div>
                         </div>
@@ -70,6 +75,18 @@
                                 <x-icon name="users" class="size-4.5"/>
                                 Pengguna
                                 <span class="ml-auto rounded-brutal bg-cream/15 px-2 py-0.5 text-[10px] font-bold">{{ App\Models\User::count() }}</span>
+                            </a>
+                            @php
+                                $pendingCount = App\Models\Post::pendingReview()->count()
+                                    + App\Models\Article::pendingReview()->count()
+                                    + App\Models\Announcement::pendingReview()->count();
+                            @endphp
+                            <a href="{{ route('admin.persetujuan.index') }}" class="flex items-center gap-3 rounded-brutal px-4 py-2.5 text-sm font-bold transition-colors {{ request()->routeIs('admin.persetujuan.*') ? 'bg-acid text-ink' : 'text-cream/70 hover:bg-cream/10 hover:text-cream' }}">
+                                <x-icon name="clock" class="size-4.5"/>
+                                Persetujuan
+                                @if ($pendingCount > 0)
+                                    <span class="ml-auto rounded-brutal bg-accent px-2 py-0.5 text-[10px] font-bold text-ink">{{ $pendingCount }}</span>
+                                @endif
                             </a>
                             <a href="{{ route('admin.pengaturan') }}" class="flex items-center gap-3 rounded-brutal px-4 py-2.5 text-sm font-bold transition-colors {{ request()->routeIs('admin.pengaturan*') ? 'bg-acid text-ink' : 'text-cream/70 hover:bg-cream/10 hover:text-cream' }}">
                                 <x-icon name="settings" class="size-4.5"/>

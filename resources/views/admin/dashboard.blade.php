@@ -6,20 +6,24 @@
 @section('content')
     {{-- Statistik --}}
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @php
-            $stats = [
-                ['label' => 'Total Berita', 'value' => $totalBerita, 'icon' => 'book', 'accent' => 'bg-acid'],
-                ['label' => 'Total Artikel', 'value' => $totalArtikel, 'icon' => 'pen', 'accent' => 'bg-blue'],
-                ['label' => 'Menunggu Review', 'value' => $pendingArtikel, 'icon' => 'clock', 'accent' => 'bg-accent'],
-                ['label' => 'Pengumuman Aktif', 'value' => $activePengumuman, 'icon' => 'megaphone', 'accent' => 'bg-acid'],
-                ['label' => 'Agenda Mendatang', 'value' => $agendaMendatang, 'icon' => 'calendar', 'accent' => 'bg-green'],
-                ['label' => 'Prestasi', 'value' => $totalPrestasi, 'icon' => 'award', 'accent' => 'bg-amber'],
-                ['label' => 'Total Pengguna', 'value' => $totalUsers, 'icon' => 'users', 'accent' => 'bg-blue'],
-                ['label' => 'Total Pembaca', 'value' => number_format($totalViews), 'icon' => 'eye', 'accent' => 'bg-ink'],
-            ];
-        @endphp
+    @php
+        $stats = [
+            ['label' => 'Total Berita', 'value' => $totalBerita, 'icon' => 'book', 'accent' => 'bg-acid'],
+            ['label' => 'Total Artikel', 'value' => $totalArtikel, 'icon' => 'pen', 'accent' => 'bg-blue'],
+            ['label' => 'Menunggu Review', 'value' => $pendingBerita + $pendingArtikel + $pendingPengumuman, 'icon' => 'clock', 'accent' => 'bg-accent', 'link' => route('admin.persetujuan.index')],
+            ['label' => 'Pengumuman Aktif', 'value' => $activePengumuman, 'icon' => 'megaphone', 'accent' => 'bg-acid'],
+            ['label' => 'Agenda Mendatang', 'value' => $agendaMendatang, 'icon' => 'calendar', 'accent' => 'bg-green'],
+            ['label' => 'Prestasi', 'value' => $totalPrestasi, 'icon' => 'award', 'accent' => 'bg-amber'],
+            ['label' => 'Total Pengguna', 'value' => $totalUsers, 'icon' => 'users', 'accent' => 'bg-blue'],
+            ['label' => 'Total Pembaca', 'value' => number_format($totalViews), 'icon' => 'eye', 'accent' => 'bg-ink'],
+        ];
+    @endphp
         @foreach ($stats as $stat)
-            <div class="reveal card card-hover border-2 p-5" style="transition-delay: {{ $loop->index * 0.04 }}s">
+            @if (isset($stat['link']))
+                <a href="{{ $stat['link'] }}" class="reveal card card-hover border-2 p-5 transition-colors hover:bg-acid/10" style="transition-delay: {{ $loop->index * 0.04 }}s">
+            @else
+                <div class="reveal card card-hover border-2 p-5" style="transition-delay: {{ $loop->index * 0.04 }}s">
+            @endif
                 <div class="flex items-center justify-between">
                     <span class="grid size-11 place-items-center rounded-brutal border-2 border-ink shadow-brutal-sm {{ $stat['accent'] }} text-ink">
                         <x-icon :name="$stat['icon']" class="size-5"/>
@@ -28,7 +32,11 @@
                 </div>
                 <p class="mt-4 font-display text-2xl font-bold text-ink">{{ $stat['value'] }}</p>
                 <p class="mt-1 text-xs font-bold uppercase tracking-wider text-ink-3">{{ $stat['label'] }}</p>
-            </div>
+            @if (isset($stat['link']))
+                </a>
+            @else
+                </div>
+            @endif
         @endforeach
     </div>
 
@@ -51,10 +59,12 @@
                             <p class="mt-0.5 text-xs font-semibold text-ink-3">{{ $post->category?->name }} · {{ $post->display_date }}</p>
                         </div>
                         <div class="flex shrink-0 items-center gap-2">
-                            @if ($post->is_published)
+                            @if ($post->status === 'published')
                                 <span class="tag-green">Tampil</span>
+                            @elseif ($post->status === 'review')
+                                <span class="tag-amber">Review</span>
                             @else
-                                <span class="tag-amber">Draft</span>
+                                <span class="tag-gray">Draft</span>
                             @endif
                             <a href="{{ route('admin.berita.edit', $post) }}" class="grid size-8 place-items-center rounded-brutal border-2 border-ink bg-cream text-ink transition-colors hover:bg-acid" title="Edit">
                                 <x-icon name="edit" class="size-3.5"/>

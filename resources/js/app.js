@@ -372,6 +372,18 @@ document.querySelectorAll('.img-skel').forEach((wrap) => {
     }
 });
 
+/* ── Password toggle ─────────────────────────────────────── */
+document.querySelectorAll('.toggle-password').forEach((btn) => {
+    btn.addEventListener('click', () => {
+        const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        btn.querySelector('.eye-open')?.classList.toggle('hidden', !isPassword);
+        btn.querySelector('.eye-closed')?.classList.toggle('hidden', isPassword);
+    });
+});
+
 /* ── Image file preview ────────────────────────────────── */
 document.querySelectorAll('input[type="file"][accept*="image"]').forEach((input) => {
     input.addEventListener('change', () => {

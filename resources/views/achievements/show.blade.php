@@ -51,7 +51,7 @@
 
         @if ($achievement->description)
             <div class="prose-wrap mt-10">
-                {!! Str::markdown($achievement->description) !!}
+                {!! Str::markdown($achievement->description, ['html_input' => 'strip']) !!}
             </div>
         @endif
     </article>

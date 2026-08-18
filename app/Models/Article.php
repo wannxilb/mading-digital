@@ -105,6 +105,6 @@ class Article extends Model
 
     public function getHtmlAttribute(): string
     {
-        return Str::markdown($this->body);
+        return Str::markdown($this->body, ['html_input' => 'strip']);
     }
 }

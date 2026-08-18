@@ -35,12 +35,13 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
+        $data['status'] = Announcement::STATUS_AKTIF;
 
         Announcement::create($data + ['created_by' => auth()->id()]);
 
         return redirect()
             ->route('admin.pengumuman.index')
-            ->with('success', 'Pengumuman berhasil disimpan.');
+            ->with('success', 'Pengumuman berhasil dipublikasikan.');
     }
 
     public function edit(Announcement $announcement)
@@ -81,7 +82,7 @@ class AnnouncementController extends Controller
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'is_pinned' => ['nullable', 'boolean'],
-            'status' => ['required', 'in:'.implode(',', array_keys(Announcement::STATUSES))],
+            'status' => ['nullable', 'in:'.implode(',', array_keys(Announcement::STATUSES))],
         ]) + ['is_pinned' => $request->boolean('is_pinned')];
     }
 }

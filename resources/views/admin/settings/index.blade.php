@@ -4,7 +4,7 @@
 @section('heading', 'Pengaturan Situs')
 
 @section('content')
-    <form method="POST" action="{{ route('admin.pengaturan.update') }}" enctype="multipart/form-data" class="space-y-8">
+    <form method="POST" action="{{ route('admin.pengaturan.update') }}" enctype="multipart/form-data" class="mx-auto max-w-3xl space-y-8">
         @csrf
         @method('PUT')
 
@@ -50,10 +50,22 @@
                                 <x-icon name="image" class="size-6"/>
                             </div>
                         @endif
-                        <label for="favicon" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
-                            <x-icon name="image" class="size-3.5"/>
-                            Pilih File
-                        </label>
+                        <div class="flex items-center gap-2">
+                            <label for="favicon" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
+                                <x-icon name="image" class="size-3.5"/>
+                                Pilih File
+                            </label>
+                            @if ($settings['favicon_path'])
+                                <form method="POST" action="{{ route('admin.pengaturan.destroyImage', 'favicon_path') }}" onsubmit="return confirm('Hapus favicon?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-outline !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-cream !px-4 !py-2 text-xs">
+                                        <x-icon name="trash" class="size-3.5"/>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                         <input type="file" name="favicon" id="favicon" class="hidden" accept=".ico,.png,.svg,image/x-icon,image/png,image/svg+xml">
                     </div>
                 </div>
@@ -72,10 +84,22 @@
                                 <x-icon name="image" class="size-6"/>
                             </div>
                         @endif
-                        <label for="logo" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
-                            <x-icon name="image" class="size-3.5"/>
-                            Pilih File
-                        </label>
+                        <div class="flex items-center gap-2">
+                            <label for="logo" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
+                                <x-icon name="image" class="size-3.5"/>
+                                Pilih File
+                            </label>
+                            @if ($settings['logo_path'])
+                                <form method="POST" action="{{ route('admin.pengaturan.destroyImage', 'logo_path') }}" onsubmit="return confirm('Hapus logo?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-outline !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-cream !px-4 !py-2 text-xs">
+                                        <x-icon name="trash" class="size-3.5"/>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                         <input type="file" name="logo" id="logo" class="hidden" accept=".png,.svg,.jpg,.jpeg,image/png,image/svg+xml,image/jpeg">
                     </div>
                 </div>
@@ -94,10 +118,22 @@
                                 <x-icon name="image" class="size-6"/>
                             </div>
                         @endif
-                        <label for="hero_image" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
-                            <x-icon name="image" class="size-3.5"/>
-                            Pilih File
-                        </label>
+                        <div class="flex items-center gap-2">
+                            <label for="hero_image" class="btn-outline cursor-pointer !px-4 !py-2 text-xs">
+                                <x-icon name="image" class="size-3.5"/>
+                                Pilih File
+                            </label>
+                            @if ($settings['hero_image_path'])
+                                <form method="POST" action="{{ route('admin.pengaturan.destroyImage', 'hero_image_path') }}" onsubmit="return confirm('Hapus gambar hero?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-outline !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-cream !px-4 !py-2 text-xs">
+                                        <x-icon name="trash" class="size-3.5"/>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                         <input type="file" name="hero_image" id="hero_image" class="hidden" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
                     </div>
                 </div>

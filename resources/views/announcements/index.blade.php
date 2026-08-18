@@ -8,6 +8,13 @@
         <div class="mx-auto max-w-6xl px-4 sm:px-6 pt-28 sm:pt-32 pb-10">
             <h1 class="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">Pengumuman</h1>
             <p class="mt-3 max-w-xl text-sm leading-relaxed text-ink-2 sm:text-base">Informasi penting dari sekolah yang perlu diketahui.</p>
+
+            <form method="GET" action="{{ route('pengumuman.index') }}" class="mt-6 max-w-md">
+                <div class="relative">
+                    <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari pengumuman…" class="field border-2 !py-3 pr-20" aria-label="Cari pengumuman">
+                    <button type="submit" class="btn-ink absolute right-2 top-1/2 !px-3.5 !py-1.5 -translate-y-1/2 text-xs">Cari</button>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -28,7 +35,9 @@
                                     </span>
                                 @endif
                             </div>
-                            <h2 class="mt-2 font-display text-xl font-bold leading-snug text-ink">{{ $peng->title }}</h2>
+                            <h2 class="mt-2 font-display text-xl font-bold leading-snug text-ink">
+                                <a href="{{ route('pengumuman.show', $peng) }}" class="hover:text-accent transition-colors">{{ $peng->title }}</a>
+                            </h2>
                             <p class="mt-2 text-sm leading-relaxed text-ink-2">{!! nl2br(e($peng->content)) !!}</p>
                         </div>
                     @endforeach
@@ -51,7 +60,9 @@
                                 </span>
                             @endif
                         </div>
-                        <h2 class="mt-1.5 font-display text-lg font-bold leading-snug text-ink group-hover:text-accent transition-colors">{{ $peng->title }}</h2>
+                        <h2 class="mt-1.5 font-display text-lg font-bold leading-snug text-ink group-hover:text-accent transition-colors">
+                            <a href="{{ route('pengumuman.show', $peng) }}" class="hover:text-accent transition-colors">{{ $peng->title }}</a>
+                        </h2>
                         <p class="mt-1.5 text-sm leading-relaxed text-ink-2">{!! nl2br(e($peng->content)) !!}</p>
                     </div>
                 </div>

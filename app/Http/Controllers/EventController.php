@@ -3,14 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $events = Event::query()
+            ->upcoming()
+            ->when($request->filled('q'), fn ($q) => $q->where(fn ($w) => $w
+                ->where('title', 'like', '%'.$request->string('q')->toString().'%')
+                ->orWhere('location', 'like', '%'.$request->string('q')->toString().'%')
+                ->orWhere('organizer', 'like', '%'.$request->string('q')->toString().'%')
+            ))
+            ->orderBy('event_date')
+            ->paginate(8)
+            ->withQueryString();
+
         return view('events.index', [
-            'upcoming' => Event::upcoming()->orderBy('event_date')->paginate(8),
-            'past' => Event::past()->orderByDesc('event_date')->take(6)->get(),
+            'events' => $events,
         ]);
     }
 

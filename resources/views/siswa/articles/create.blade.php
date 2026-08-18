@@ -4,7 +4,7 @@
 @section('heading', 'Tulis Karya Baru')
 
 @section('content')
-    <form method="POST" action="{{ route('siswa.karya.store') }}" enctype="multipart/form-data" class="max-w-4xl">
+    <form method="POST" action="{{ route('siswa.karya.store') }}" enctype="multipart/form-data" class="mx-auto max-w-4xl">
         @csrf
 
         <div class="grid gap-6 lg:grid-cols-3">

@@ -31,7 +31,7 @@ class Category extends Model
 
     public function publishedPosts(): HasMany
     {
-        return $this->posts()->where('is_published', true);
+        return $this->posts()->published();
     }
 
     public function publishedArticles(): HasMany

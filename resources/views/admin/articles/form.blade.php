@@ -6,7 +6,7 @@
 @section('heading', isset($article) ? 'Edit Artikel' : 'Tambah Artikel')
 
 @section('content')
-    <form method="POST" action="{{ isset($article) ? route('admin.artikel.update', $article) : route('admin.artikel.store') }}" enctype="multipart/form-data" class="max-w-4xl">
+    <form method="POST" action="{{ isset($article) ? route('admin.artikel.update', $article) : route('admin.artikel.store') }}" enctype="multipart/form-data" class="mx-auto max-w-4xl">
         @csrf
         @if (isset($article))
             @method('PUT')

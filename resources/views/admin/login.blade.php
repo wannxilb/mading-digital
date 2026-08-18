@@ -9,7 +9,7 @@
             <div class="reveal text-center">
                 <span class="inline-grid size-16 place-items-center rounded-brutal border-2 border-ink bg-ink font-display text-2xl font-bold text-acid shadow-brutal">MD</span>
                 <h1 class="mt-5 font-display text-2xl font-bold tracking-tight text-ink">Masuk ke akun</h1>
-                <p class="mt-2 text-sm text-ink-2">Admin masuk ke panel pengelola, guru dan siswa masuk sebagai pengguna situs.</p>
+                <p class="mt-2 text-sm text-ink-2">Admin/guru pembina masuk ke panel pengelola, siswa masuk sebagai pengguna situs.</p>
             </div>
 
             <form method="POST" action="{{ route('admin.login.attempt') }}" class="reveal card mt-8 border-2 border-ink p-6 shadow-brutal-sm sm:p-8" style="transition-delay:.1s">
@@ -28,7 +28,13 @@
 
                 <div class="mt-5">
                     <label for="password" class="label">Kata Sandi</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password" class="field mt-2">
+                    <div class="relative mt-2">
+                        <input type="password" id="password" name="password" required autocomplete="current-password" class="field !pr-11">
+                        <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 grid size-8 place-items-center rounded-brutal text-ink-3 transition-colors hover:text-ink" aria-label="Tampilkan sandi">
+                            <x-icon name="eye" class="size-[18px] eye-open"/>
+                            <x-icon name="eye-off" class="size-[18px] eye-closed hidden"/>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mt-5 flex items-center justify-between">

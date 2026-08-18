@@ -6,7 +6,7 @@
 @section('heading', isset($announcement) ? 'Edit Pengumuman' : 'Buat Pengumuman')
 
 @section('content')
-    <form method="POST" action="{{ isset($announcement) ? route('admin.pengumuman.update', $announcement) : route('admin.pengumuman.store') }}" class="max-w-3xl">
+    <form method="POST" action="{{ isset($announcement) ? route('admin.pengumuman.update', $announcement) : route('admin.pengumuman.store') }}" class="mx-auto max-w-3xl">
         @csrf
         @if (isset($announcement))
             @method('PUT')

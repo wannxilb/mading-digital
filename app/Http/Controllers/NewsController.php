@@ -26,7 +26,7 @@ class NewsController extends Controller
 
     public function show(Post $post)
     {
-        abort_unless($post->is_published, 404);
+        abort_unless($post->status === Post::STATUS_PUBLISHED, 404);
 
         $post->increment('views');
 

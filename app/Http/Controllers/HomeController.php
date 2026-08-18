@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Event;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -39,7 +40,8 @@ class HomeController extends Controller
             'totalBerita' => Post::published()->count(),
             'totalArtikel' => Article::published()->count(),
             'totalPrestasi' => Achievement::count(),
-            'totalViews' => Post::published()->sum('views') + Article::published()->sum('views'),
+            'totalViews' => DB::select("SELECT COALESCE(SUM(views),0) as total FROM posts WHERE status = 'published'")[0]->total
+                + DB::select("SELECT COALESCE(SUM(views),0) as total FROM articles WHERE status = 'published'")[0]->total,
         ]);
     }
 

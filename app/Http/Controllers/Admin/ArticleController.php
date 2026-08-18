@@ -42,12 +42,14 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
+        $data['status'] = Article::STATUS_PUBLISHED;
+        $data['published_at'] = now();
 
         Article::create($data);
 
         return redirect()
             ->route('admin.artikel.index')
-            ->with('success', 'Artikel berhasil disimpan.');
+            ->with('success', 'Artikel berhasil dipublikasikan.');
     }
 
     public function edit(Article $article)

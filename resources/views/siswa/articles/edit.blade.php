@@ -4,7 +4,7 @@
 @section('heading', 'Edit Karya')
 
 @section('content')
-    <form method="POST" action="{{ route('siswa.karya.update', $article) }}" enctype="multipart/form-data" class="max-w-4xl">
+    <form method="POST" action="{{ route('siswa.karya.update', $article) }}" enctype="multipart/form-data" class="mx-auto max-w-4xl">
         @csrf
         @method('PUT')
 

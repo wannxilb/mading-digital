@@ -36,7 +36,6 @@ class AuthController extends Controller
 
         return redirect()->intended(match (true) {
             Auth::user()->isAdmin() => route('admin.dashboard'),
-            Auth::user()->isGuru() => route('guru.dashboard'),
             Auth::user()->isSiswa() => route('siswa.dashboard'),
             default => route('home'),
         });

@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\Admin\AchievementController as AdminAchievementController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -15,15 +16,12 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AnnouncementController as PublicAnnouncementController;
 use App\Http\Controllers\ArticleController as PublicArticleController;
 use App\Http\Controllers\EventController as PublicEventController;
-use App\Http\Controllers\Guru\AnnouncementController as GuruAnnouncementController;
-use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
-use App\Http\Controllers\Guru\ReviewController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Siswa\ArticleController as SiswaArticleController;
 use App\Http\Controllers\Siswa\DashboardController as SiswaDashboardController;
-use App\Http\Middleware\EnsureRole;
+use App\Http\Controllers\Siswa\ProfileController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +31,7 @@ Route::get('/berita/{post:slug}', [NewsController::class, 'show'])->name('berita
 Route::get('/artikel', [PublicArticleController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{article:slug}', [PublicArticleController::class, 'show'])->name('artikel.show');
 Route::get('/pengumuman', [PublicAnnouncementController::class, 'index'])->name('pengumuman.index');
+Route::get('/pengumuman/{announcement}', [PublicAnnouncementController::class, 'show'])->name('pengumuman.show');
 Route::get('/agenda', [PublicEventController::class, 'index'])->name('agenda.index');
 Route::get('/agenda/{event}', [PublicEventController::class, 'show'])->name('agenda.show');
 Route::get('/prestasi', [AchievementController::class, 'index'])->name('prestasi.index');
@@ -45,7 +44,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-        Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+        Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.attempt');
     });
 
     Route::middleware(['auth', EnsureUserIsAdmin::class])->group(function () {
@@ -102,6 +101,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::get('/baru', [UserController::class, 'create'])->name('create');
             Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::get('/import', [UserController::class, 'import'])->name('import');
+            Route::post('/import', [UserController::class, 'processImport'])->name('import.process');
             Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
             Route::put('/{user}', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
@@ -116,11 +117,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/pengaturan', [SettingController::class, 'index'])->name('pengaturan');
         Route::put('/pengaturan', [SettingController::class, 'update'])->name('pengaturan.update');
+        Route::delete('/pengaturan/{key}', [SettingController::class, 'destroyImage'])->name('pengaturan.destroyImage');
+
+        Route::prefix('persetujuan')->name('persetujuan.')->group(function () {
+            Route::get('/', [ApprovalController::class, 'index'])->name('index');
+            Route::post('/berita/{post}/setuju', [ApprovalController::class, 'approvePost'])->name('approvePost');
+            Route::post('/berita/{post}/tolak', [ApprovalController::class, 'rejectPost'])->name('rejectPost');
+            Route::post('/artikel/{article}/setuju', [ApprovalController::class, 'approveArticle'])->name('approveArticle');
+            Route::post('/artikel/{article}/tolak', [ApprovalController::class, 'rejectArticle'])->name('rejectArticle');
+            Route::post('/pengumuman/{announcement}/setuju', [ApprovalController::class, 'approveAnnouncement'])->name('approveAnnouncement');
+            Route::post('/pengumuman/{announcement}/tolak', [ApprovalController::class, 'rejectAnnouncement'])->name('rejectAnnouncement');
+        });
     });
 });
 
 Route::prefix('siswa')->name('siswa.')->middleware(['auth', 'EnsureRole:siswa'])->group(function () {
     Route::get('/', [SiswaDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profil.update');
 
     Route::prefix('karya')->name('karya.')->group(function () {
         Route::get('/', [SiswaArticleController::class, 'index'])->name('index');
@@ -130,21 +145,5 @@ Route::prefix('siswa')->name('siswa.')->middleware(['auth', 'EnsureRole:siswa'])
         Route::get('/{article}/edit', [SiswaArticleController::class, 'edit'])->name('edit');
         Route::put('/{article}', [SiswaArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [SiswaArticleController::class, 'destroy'])->name('destroy');
-    });
-});
-
-Route::prefix('guru')->name('guru.')->middleware(['auth', 'EnsureRole:guru,admin'])->group(function () {
-    Route::get('/', [GuruDashboardController::class, 'index'])->name('dashboard');
-
-    Route::prefix('review')->name('review.')->group(function () {
-        Route::get('/', [ReviewController::class, 'index'])->name('index');
-        Route::get('/{article}', [ReviewController::class, 'show'])->name('show');
-        Route::post('/{article}/approve', [ReviewController::class, 'approve'])->name('approve');
-        Route::post('/{article}/reject', [ReviewController::class, 'reject'])->name('reject');
-    });
-
-    Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
-        Route::get('/baru', [GuruAnnouncementController::class, 'create'])->name('create');
-        Route::post('/', [GuruAnnouncementController::class, 'store'])->name('store');
     });
 });

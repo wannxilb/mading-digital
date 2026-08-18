@@ -4,7 +4,7 @@
 @section('heading', 'Tambah Pengguna')
 
 @section('content')
-    <form method="POST" action="{{ route('admin.pengguna.store') }}" class="max-w-2xl">
+    <form method="POST" action="{{ route('admin.pengguna.store') }}" class="mx-auto max-w-2xl">
         @csrf
 
         <div class="reveal card border-2 p-6 sm:p-8">
@@ -22,6 +22,12 @@
                 @error('email')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
             </div>
 
+            <div class="mt-5">
+                <label for="nis" class="label">NIS <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
+                <input type="text" id="nis" name="nis" value="{{ old('nis') }}" placeholder="cth: 2026001" class="field mt-2">
+                @error('nis')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
+            </div>
+
             <div class="mt-5 grid gap-5 sm:grid-cols-2">
                 <div>
                     <label for="role" class="label">Peran</label>
@@ -34,13 +40,29 @@
                 </div>
                 <div>
                     <label for="class" class="label">Kelas <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
-                    <input type="text" id="class" name="class" value="{{ old('class') }}" placeholder="cth: X IPA 1" class="field mt-2">
+                    <input type="text" id="class" name="class" value="{{ old('class') }}" placeholder="cth: 12 RPL 2" class="field mt-2">
                 </div>
             </div>
 
             <div class="mt-5">
+                <label for="jurusan" class="label">Jurusan <span class="font-normal normal-case text-ink-3">(untuk siswa)</span></label>
+                <select id="jurusan" name="jurusan" class="field mt-2">
+                    <option value="">Pilih jurusan</option>
+                    @foreach (\App\Models\User::JURUSAN as $key => $label)
+                        <option value="{{ $key }}" {{ old('jurusan') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mt-5">
                 <label for="password" class="label">Password</label>
-                <input type="password" id="password" name="password" required class="field mt-2" minlength="8">
+                <div class="relative mt-2">
+                    <input type="password" id="password" name="password" required class="field !pr-11" minlength="8">
+                    <button type="button" class="toggle-password absolute right-2 top-1/2 -translate-y-1/2 grid size-8 place-items-center rounded-brutal text-ink-3 transition-colors hover:text-ink" aria-label="Tampilkan sandi">
+                        <x-icon name="eye" class="size-[18px] eye-open"/>
+                        <x-icon name="eye-off" class="size-[18px] eye-closed hidden"/>
+                    </button>
+                </div>
                 @error('password')<p class="mt-2 text-xs font-bold text-accent">{{ $message }}</p>@enderror
                 <p class="mt-1.5 text-xs font-semibold text-ink-3">Minimal 8 karakter.</p>
             </div>

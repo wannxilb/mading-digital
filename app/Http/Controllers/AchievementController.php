@@ -10,6 +10,11 @@ class AchievementController extends Controller
     public function index(Request $request)
     {
         $achievements = Achievement::query()
+            ->when($request->filled('q'), fn ($q) => $q->where(fn ($w) => $w
+                ->where('title', 'like', '%'.$request->string('q')->toString().'%')
+                ->orWhere('student_name', 'like', '%'.$request->string('q')->toString().'%')
+                ->orWhere('competition_name', 'like', '%'.$request->string('q')->toString().'%')
+            ))
             ->when($request->filled('level'), fn ($q) => $q->where('competition_level', $request->string('level')->toString()))
             ->orderByDesc('achievement_date')
             ->paginate(12)

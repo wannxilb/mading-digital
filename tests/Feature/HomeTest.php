@@ -46,7 +46,7 @@ class HomeTest extends TestCase
     public function test_draft_post_returns_404(): void
     {
         $category = Category::factory()->create();
-        $post = Post::factory()->create(['category_id' => $category->id, 'is_published' => false]);
+        $post = Post::factory()->create(['category_id' => $category->id, 'status' => Post::STATUS_DRAFT]);
 
         $this->get('/berita/'.$post->slug)->assertNotFound();
     }

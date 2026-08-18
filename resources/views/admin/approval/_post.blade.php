@@ -1,0 +1,46 @@
+<div class="card p-5">
+    <div class="flex flex-wrap items-center gap-2">
+        <span class="tag-blue">Berita</span>
+        <span class="tag-amber">Menunggu Review</span>
+        <span class="text-xs font-semibold text-ink-3">{{ $item->created_at->diffForHumans() }}</span>
+    </div>
+    <h3 class="mt-3 font-display text-lg font-bold text-ink">{{ $item->title }}</h3>
+    <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-ink-3">
+        <span>{{ $item->author }}</span>
+        @if ($item->category)
+            <span>{{ $item->category->name }}</span>
+        @endif
+    </div>
+    @if ($item->excerpt)
+        <p class="mt-2 text-sm text-ink-2 line-clamp-2">{{ $item->excerpt }}</p>
+    @endif
+    @if ($item->review_note)
+        <div class="mt-2 rounded-brutal border-2 border-amber-300 bg-amber-50 p-3 text-xs text-amber-800">
+            <strong>Catatan:</strong> {{ $item->review_note }}
+        </div>
+    @endif
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+        <form method="POST" action="{{ route('admin.persetujuan.approvePost', $item) }}">
+            @csrf
+            <button type="submit" class="btn-ink !bg-green-600 !border-green-600 hover:!bg-green-700 text-xs">
+                <x-icon name="check" class="size-3.5"/>
+                Setujui
+            </button>
+        </form>
+        <button type="button" onclick="document.getElementById('reject-post-{{ $item->id }}').classList.toggle('hidden')" class="btn-outline !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-cream text-xs">
+            <x-icon name="x" class="size-3.5"/>
+            Tolak
+        </button>
+        <a href="{{ route('admin.berita.edit', $item) }}" class="btn-ghost text-xs">Edit</a>
+    </div>
+    <div id="reject-post-{{ $item->id }}" class="hidden mt-3">
+        <form method="POST" action="{{ route('admin.persetujuan.rejectPost', $item) }}">
+            @csrf
+            <textarea name="review_note" rows="2" class="field w-full" placeholder="Alasan penolakan…" required></textarea>
+            <div class="mt-2 flex gap-2">
+                <button type="submit" class="btn-outline !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-cream text-xs">Kirim Penolakan</button>
+                <button type="button" onclick="document.getElementById('reject-post-{{ $item->id }}').classList.add('hidden')" class="btn-ghost text-xs">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>
